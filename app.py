@@ -1,5 +1,5 @@
 from flask import Flask, request
-import subprocess
+import re
 
 app = Flask(__name__)
 
@@ -11,51 +11,54 @@ def hello_world():
 
 @app.route('/submit-form', methods=['POST'])
 def submit_form():
+    # Check if the request method is POST
+    if request.method != 'POST':
+        abort(405)  # Method not allowed
+
     # Check if the request contains JSON data
-    if request.method == 'POST' and request.is_json:
-        try:
-            # Parse JSON data from the request
-            data = request.get_json()
+    if not request.is_json:
+        abort(400)  # Bad request
 
-            # Extract specific fields
-            form_id = data.get('formID', None)
-            submission_id = data.get('submissionID', None)
-            webhook_url = data.get('webhookURL', None)
-            pretty_info = data.get('pretty', None)
+    try:
+        # Parse JSON data from the request
+        data = request.get_json()
 
-            # Define a regular expression pattern to match each question-response pair
-            pattern = r'([^:,]+):([^:,]+)'
+        # Extract specific fields
+        form_id = data.get('formID', None)
+        submission_id = data.get('submissionID', None)
+        webhook_url = data.get('webhookURL', None)
+        pretty_info = data.get('pretty', None)
 
-            # Extract question-response pairs using the regular expression
-            pairs = re.findall(pattern, pretty_info)
+        # Define a regular expression pattern to match each question-response pair
+        pattern = r'([^:,]+):([^:,]+)'
 
-            # Initialize an empty dictionary to store the question-response pairs
-            parsed_data = {}
+        # Extract question-response pairs using the regular expression
+        pairs = re.findall(pattern, pretty_info)
 
-            # Iterate through the pairs
-            for pair in pairs:
-                # Remove any leading/trailing whitespace from the question and response
-                question = pair[0].strip()
-                response = pair[1].strip()
-                # Add the question-response pair to the dictionary
-                parsed_data[question] = response
+        # Initialize an empty dictionary to store the question-response pairs
+        parsed_data = {}
 
-            # Add formID, submissionID, and webhookURL to the parsed data
-            parsed_data['formID'] = form_id
-            parsed_data['submissionID'] = submission_id
-            parsed_data['webhookURL'] = webhook_url
+        # Iterate through the pairs
+        for pair in pairs:
+            # Remove any leading/trailing whitespace from the question and response
+            question = pair[0].strip()
+            response = pair[1].strip()
+            # Add the question-response pair to the dictionary
+            parsed_data[question] = response
 
-            # Convert the dictionary to JSON format
-            json_data = json.dumps(parsed_data, indent=4)
+        # Add formID, submissionID, and webhookURL to the parsed data
+        parsed_data['formID'] = form_id
+        parsed_data['submissionID'] = submission_id
+        parsed_data['webhookURL'] = webhook_url
 
-            # Return the JSON data as the response
-            return json_data, 200
-        except Exception as e:
-            # Return an error response if there's an exception
-            return f"Error processing request: {e}", 500
-    else:
-        # Return an error response if the request is not a valid JSON POST request
-        return 'Invalid request', 400
+        # Convert the dictionary to JSON format
+        json_data = json.dumps(parsed_data, indent=4)
+
+        # Return the JSON data as the response
+        return json_data, 200
+    except Exception as e:
+        # Return an error response if there's an exception
+        return f"Error processing request: {e}", 500
 
 
 if __name__ == '__main__':
