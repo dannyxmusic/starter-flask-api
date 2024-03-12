@@ -14,7 +14,7 @@ def submit_form():
     # Check if the request contains form data
     if request.method == 'POST':
         # Parse form data from the request
-        form_data = request.form.to_dict()
+        form_data = request.form
 
         # Return a response to indicate successful processing
         return 'Form data received successfully!', 200
