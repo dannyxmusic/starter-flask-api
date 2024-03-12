@@ -17,7 +17,7 @@ def submit_form():
         form_data = request.form
 
         # Return a response to indicate successful processing
-        return form_data, 200
+        return print(form_data), 200
     else:
         # Return an error response for unsupported request methods
         return 'Method not allowed', 405
