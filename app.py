@@ -11,20 +11,51 @@ def hello_world():
 
 @app.route('/submit-form', methods=['POST'])
 def submit_form():
-    # Check if the request contains form data
-    if request.method == 'POST':
-        # Read the JSON data from the request
-        json_string = request.data.decode('utf-8')
+    # Check if the request contains JSON data
+    if request.method == 'POST' and request.is_json:
+        try:
+            # Parse JSON data from the request
+            data = request.get_json()
 
-        # Execute the test.py script and capture its output
-        result = subprocess.run(['python', 'test.py'], input=json_string.encode(
-            'utf-8'), capture_output=True, text=True)
+            # Extract specific fields
+            form_id = data.get('formID', None)
+            submission_id = data.get('submissionID', None)
+            webhook_url = data.get('webhookURL', None)
+            pretty_info = data.get('pretty', None)
 
-        # Return the output of test.py as the response
-        return result.stdout, 200
+            # Define a regular expression pattern to match each question-response pair
+            pattern = r'([^:,]+):([^:,]+)'
+
+            # Extract question-response pairs using the regular expression
+            pairs = re.findall(pattern, pretty_info)
+
+            # Initialize an empty dictionary to store the question-response pairs
+            parsed_data = {}
+
+            # Iterate through the pairs
+            for pair in pairs:
+                # Remove any leading/trailing whitespace from the question and response
+                question = pair[0].strip()
+                response = pair[1].strip()
+                # Add the question-response pair to the dictionary
+                parsed_data[question] = response
+
+            # Add formID, submissionID, and webhookURL to the parsed data
+            parsed_data['formID'] = form_id
+            parsed_data['submissionID'] = submission_id
+            parsed_data['webhookURL'] = webhook_url
+
+            # Convert the dictionary to JSON format
+            json_data = json.dumps(parsed_data, indent=4)
+
+            # Return the JSON data as the response
+            return json_data, 200
+        except Exception as e:
+            # Return an error response if there's an exception
+            return f"Error processing request: {e}", 500
     else:
-        # Return an error response for unsupported request methods
-        return 'Method not allowed', 405
+        # Return an error response if the request is not a valid JSON POST request
+        return 'Invalid request', 400
 
 
 if __name__ == '__main__':
