@@ -1,5 +1,4 @@
-from flask import Flask, request
-import re
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
@@ -13,13 +12,22 @@ def submit_form():
         webhook_url = request.form.get('webhookURL')
         pretty_data = request.form.get('pretty')
 
-        print(pretty_data),
-        print(form_id),
-        print(submission_id),
-        print(webhook_url),
+        # Construct a dictionary with the form data
+        data = {
+            'formID': form_id,
+            'submissionID': submission_id,
+            'webhookURL': webhook_url,
+            'prettyData': pretty_data
+        }
 
-        # Return a response if necessary
-        return 'Data received and parsed successfully!'
+        # Convert the dictionary to JSON
+        json_data = jsonify(data)
+
+        # Print the JSON data
+        print(json_data)
+
+        # Return a success response
+        return 'Data received and printed as JSON successfully!'
 
     except Exception as e:
         # Log the error
