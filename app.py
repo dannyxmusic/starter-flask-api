@@ -3,7 +3,7 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-uri = "mongodb+srv://therealdannyx:Ba7n48BQS8jiwPQd@testimonialGenerator/tpc_survey_f1"
+uri = "mongodb+srv://therealdannyx:Ba7n48BQS8jiwPQd@testimonialGenerator.mongodb.net/tpc_survey_f1"
 
 
 # Create a MongoClient instance
