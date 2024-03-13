@@ -24,7 +24,7 @@ def submit_form():
         print(data)
 
         # Return a success response
-        return 'Data received and printed as JSON successfully!'
+        return data
 
     except Exception as e:
         # Log the error
