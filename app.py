@@ -1,37 +1,51 @@
 from flask import Flask, request
-import json
+import re
 
 app = Flask(__name__)
 
 
 @app.route('/submit-form', methods=['POST'])
 def submit_form():
-    # Collect payload data from the request
-    pretty = request.form.get('pretty')
-    formID = request.form.get('formID')
-    submissionID = request.form.get('submissionID')
-    webhookURL = request.form.get('webhookURL')
-    formTitle = request.form.get('formTitle')
+    try:
+        # Access form fields from request.form
+        form_id = request.form.get('formID')
+        submission_id = request.form.get('submissionID')
+        webhook_url = request.form.get('webhookURL')
+        pretty_data = request.form.get('pretty')
 
-    # Create a dictionary to store the data
-    payload_data = {
-        'pretty': pretty,
-        'formID': formID,
-        'submissionID': submissionID,
-        'webhookURL': webhookURL,
-        'formTitle': formTitle
-    }
+        # Define a regular expression pattern to match each question-response pair
+        pattern = r'([^:]+):([^:,]+)'
 
-    # Convert dictionary to JSON format
-    json_data = json.dumps(payload_data, indent=4)
+        # Extract question-response pairs using the regular expression
+        pairs = re.findall(pattern, pretty_data)
 
-    # Print the JSON data
-    print(json_data)
+        # Initialize an empty dictionary to store the question-response pairs
+        parsed_data = {}
 
-    # Optionally, you can process or respond to the payload data here
+        # Iterate through the pairs
+        for pair in pairs:
+            # Remove any leading/trailing whitespace from the question and response
+            question = pair[0].strip()
+            response = pair[1].strip()
+            # Add the question-response pair to the dictionary
+            parsed_data[question] = response
 
-    # Return a response if needed
-    return json_data, 200
+        # Add formID, submissionID, and webhookURL to the parsed data
+        parsed_data['formID'] = form_id
+        parsed_data['submissionID'] = submission_id
+        parsed_data['webhookURL'] = webhook_url
+
+        # Do whatever you need with the parsed data
+        print('Parsed Data:', parsed_data)
+
+        # Return a response if necessary
+        return 'Data received and parsed successfully!'
+
+    except Exception as e:
+        # Log the error
+        print('An error occurred:', e)
+        # Return an error response
+        return 'An error occurred while processing the data.', 500
 
 
 if __name__ == '__main__':
