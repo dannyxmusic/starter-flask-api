@@ -46,12 +46,15 @@ def submit_form():
         webhook_url = request.form.get('webhookURL')
         pretty_data = request.form.get('pretty')
 
+        # Check if required fields are missing
+        if not (form_id and submission_id and webhook_url and pretty_data):
+            return 'One or more required fields are missing.', 400
+
         # Construct a dictionary with the form data
         data = {
             'formID': form_id,
             'submissionID': submission_id,
             'webhookURL': webhook_url,
-            # 'prettyData': pretty_data
         }
 
         # Parse 'prettyData'
@@ -64,7 +67,7 @@ def submit_form():
         print(data)
 
         # Return a success response
-        return data
+        return jsonify(data)
 
     except Exception as e:
         # Log the error
