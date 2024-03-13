@@ -19,10 +19,16 @@ def parse_pretty_data(pretty_data):
 
     # Initialize a dictionary to store key-value pairs
     extracted_data = {}
+    email = None
 
     # Iterate through each question
     for i in range(len(questions)):
         question = questions[i]
+        # If it's the email question, extract and continue
+        if "Please Enter your Email Address" in question:
+            email = pretty_data.split(":")[1].strip().split(",")[0]
+            continue
+
         # Find the index of the next question
         next_question_index = pretty_data.find(
             questions[i + 1]) if i < len(questions) - 1 else len(pretty_data)
@@ -34,6 +40,7 @@ def parse_pretty_data(pretty_data):
         # Store key-value pair in the dictionary
         extracted_data[question] = answer
 
+    extracted_data['email'] = email
     return extracted_data
 
 
@@ -61,7 +68,7 @@ def submit_form():
         parsed_data = parse_pretty_data(pretty_data)
 
         # Update 'data' dictionary with parsed data
-        data['surveyResponses'] = parsed_data
+        data.update(parsed_data)
 
         # Print the JSON data
         print(data)
