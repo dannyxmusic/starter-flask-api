@@ -1,6 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 
 app = Flask(__name__)
+
+MONGODB_API_URL = (
+    "https://us-east-2.aws.data.mongodb-api.com/app/data-dqzrn/endpoint/data/v1/action")
+MONGODB_API_KEY = (
+    "YTbtYBDp78htwpUQJyuh7Lu7CTQ5XOEYXwFwEHKTRvncFdMJkbMCXFZTKIW7lzSU")
 
 
 def parse_pretty_data(pretty_data):
@@ -73,15 +78,29 @@ def submit_form():
         # Print the JSON data
         print(data)
 
-        # Return a success response
-        return jsonify(data)
+        # Make API request to MongoDB Atlas API
+        response = requests.post(
+            f"{MONGODB_API_URL}/insertOne",
+            json={
+                "dataSource": "testimonialGenerator",
+                "database": "tpc_survey_f1",
+                "collection": "cyclic_server",
+                "document": parsed_data
+            },
+            headers={"Content-Type": "application/json",
+                     "api-key": MONGODB_API_KEY}
+        )
+
+        # Check if the MongoDB API request was successful
+        if response.status_code in [200, 201]:
+            return "Data successfully inserted into MongoDB", response.status_code
+        else:
+            return f"Error inserting data into MongoDB: {response.text}", response.status_code
 
     except Exception as e:
-        # Log the error
-        print('An error occurred:', e)
-        # Return an error response
-        return 'An error occurred while processing the data.', 500
+        # Return an error response if there's an exception
+        return f"Error processing request: {e}", 500
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True)  # Run the Flask app in debug mode
