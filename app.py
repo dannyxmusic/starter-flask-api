@@ -14,6 +14,9 @@ def submit_form():
         pretty_data = request.form.get('pretty')
 
         print(pretty_data)
+        print(form_id),
+        print(submission_id)
+        print(webhook_url)
 
         # Return a response if necessary
         return 'Data received and parsed successfully!'
