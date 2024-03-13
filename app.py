@@ -14,7 +14,7 @@ def submit_form():
         pretty_data = request.form.get('pretty')
 
         # Define a regular expression pattern to match each question-response pair
-        pattern = r'([^:,]+):\s*([^,]+)'
+        pattern = r'([^,]+?):([^,]+?)(?=,\s*[^:,]+:|$)'
 
         # Extract question-response pairs using the regular expression
         pairs = re.findall(pattern, pretty_data)
