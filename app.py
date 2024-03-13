@@ -20,11 +20,8 @@ def submit_form():
             'prettyData': pretty_data
         }
 
-        # Convert the dictionary to JSON
-        json_data = jsonify(data)
-
         # Print the JSON data
-        print(json_data)
+        print(data)
 
         # Return a success response
         return 'Data received and printed as JSON successfully!'
