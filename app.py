@@ -3,7 +3,8 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-uri = f"mongodb+srv://mongodb+srv://therealdannyx:Ba7n48BQS8jiwPQd@testimonialGenerator/tpc_survey_f1?authSource=$external&authMechanism=PLAIN"
+uri = "mongodb+srv://therealdannyx:Ba7n48BQS8jiwPQd@testimonialGenerator/tpc_survey_f1"
+
 
 # Create a MongoClient instance
 client = pymongo.MongoClient(uri)
