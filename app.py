@@ -47,7 +47,7 @@ def submit_form():
         print(extracted_data)
 
         # Return the extracted data as JSON response
-        return jsonify(extracted_data)
+        return extracted_data
 
     except Exception as e:
         # Log the error
