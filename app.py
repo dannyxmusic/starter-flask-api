@@ -1,16 +1,6 @@
-import os
-from dotenv import load_dotenv
-import requests
-from flask import Flask, abort, request
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
-
-# Load environment variables from .env file
-load_dotenv("process.env")
-
-# Define MongoDB Atlas API URL
-MONGODB_API_URL = os.getenv("MONGODB_API_URL")
-MONGODB_API_KEY = os.getenv("MONGODB_API_KEY")
 
 
 def parse_pretty_data(pretty_data):
@@ -83,29 +73,15 @@ def submit_form():
         # Print the JSON data
         print(data)
 
-        # Make API request to MongoDB Atlas API
-        response = requests.post(
-            f"{MONGODB_API_URL}/insertOne",
-            json={
-                "dataSource": "testimonialGenerator",
-                "database": "tpc_survey_f1",
-                "collection": "cyclic_server",
-                "document": parsed_data
-            },
-            headers={"Content-Type": "application/json",
-                     "api-key": MONGODB_API_KEY}
-        )
-
-        # Check if the MongoDB API request was successful
-        if response.status_code in [200, 201]:
-            return "Data successfully inserted into MongoDB", response.status_code
-        else:
-            return f"Error inserting data into MongoDB: {response.text}", response.status_code
+        # Return a success response
+        return jsonify(data)
 
     except Exception as e:
-        # Return an error response if there's an exception
-        return f"Error processing request: {e}", 500
+        # Log the error
+        print('An error occurred:', e)
+        # Return an error response
+        return 'An error occurred while processing the data.', 500
 
 
 if __name__ == '__main__':
-    app.run(debug=True)  # Run the Flask app in debug mode
+    app.run(debug=True)
