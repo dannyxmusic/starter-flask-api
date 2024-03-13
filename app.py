@@ -1,8 +1,11 @@
 from flask import Flask, request
 import requests
+from dotenv import load_dotenv
 import os
 
 app = Flask(__name__)
+
+load_dotenv()
 
 MONGODB_API_URL = os.getenv("MONGO_API_URL")
 MONGODB_API_KEY = os.getenv("MONGO_API_KEY")
