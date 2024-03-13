@@ -2,13 +2,16 @@ from flask import Flask, request
 import requests
 from dotenv import load_dotenv
 import os
+import pymongo
 
 app = Flask(__name__)
 
 load_dotenv()
+# MongoDB connection URI
+MONGO_URI = os.getenv('MONGO_URI')
 
-MONGODB_API_URL = os.getenv("MONGO_API_URL")
-MONGODB_API_KEY = os.getenv("MONGO_API_KEY")
+# Create a MongoClient instance
+client = pymongo.MongoClient(MONGO_URI)
 
 
 def parse_pretty_data(pretty_data):
@@ -81,24 +84,21 @@ def submit_form():
         # Print the JSON data
         print(data)
 
-        # Make API request to MongoDB Atlas API
-        response = requests.post(
-            f"{MONGODB_API_URL}/insertOne",
-            json={
-                "dataSource": "testimonialGenerator",
-                "database": "tpc_survey_f1",
-                "collection": "cyclic_server",
-                "document": data
-            },
-            headers={"Content-Type": "application/json",
-                     "api-key": MONGODB_API_KEY}
-        )
+        # # Make API request to MongoDB Atlas API
+        # response = requests.post(
+        #     f"{MONGODB_API_URL}/insertOne",
+        #     json={
+        #         "dataSource": "testimonialGenerator",
+        #         "database": "tpc_survey_f1",
+        #         "collection": "cyclic_server",
+        #         "document": data
+        #     },
+        #     headers={"Content-Type": "application/json",
+        #              "api-key": MONGODB_API_KEY}
+        # )
 
-        # Check if the MongoDB API request was successful
-        if response.status_code in [200, 201]:
-            return "Data successfully inserted into MongoDB", response.status_code
-        else:
-            return f"Error inserting data into MongoDB: {response.text}", response.status_code
+        # Simulate an error response
+        return "An error occurred while processing the request.", 500
 
     except Exception as e:
         # Return an error response if there's an exception
