@@ -86,7 +86,7 @@ def submit_form():
                 "dataSource": "testimonialGenerator",
                 "database": "tpc_survey_f1",
                 "collection": "cyclic_server",
-                "document": parsed_data
+                "document": data
             },
             headers={"Content-Type": "application/json",
                      "api-key": MONGODB_API_KEY}
