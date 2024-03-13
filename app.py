@@ -51,14 +51,14 @@ def submit_form():
             'formID': form_id,
             'submissionID': submission_id,
             'webhookURL': webhook_url,
-            'prettyData': pretty_data
+            # 'prettyData': pretty_data
         }
 
         # Parse 'prettyData'
         parsed_data = parse_pretty_data(pretty_data)
 
         # Update 'data' dictionary with parsed data
-        data['parsedData'] = parsed_data
+        data['surveyResponses'] = parsed_data
 
         # Print the JSON data
         print(data)
