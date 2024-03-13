@@ -1,12 +1,11 @@
 from flask import Flask, request
 import requests
+import os
 
 app = Flask(__name__)
 
-MONGODB_API_URL = (
-    "https://us-east-2.aws.data.mongodb-api.com/app/data-dqzrn/endpoint/data/v1/action")
-MONGODB_API_KEY = (
-    "YTbtYBDp78htwpUQJyuh7Lu7CTQ5XOEYXwFwEHKTRvncFdMJkbMCXFZTKIW7lzSU")
+MONGODB_API_URL = os.getenv("MONGO_API_URL")
+MONGODB_API_KEY = os.getenv("MONGO_API_KEY")
 
 
 def parse_pretty_data(pretty_data):
