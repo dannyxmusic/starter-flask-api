@@ -1,25 +1,26 @@
-from flask import Flask, request
+import os
 import re
+import requests
+from flask import Flask, abort, request
 
 app = Flask(__name__)
 
-
-@app.route('/')
-def hello_world():
-    return 'Hello, daniel!'
+# Define MongoDB Atlas API URL
+MONGODB_API_URL = os.getenv("MONGODB_API_URL")
+MONGODB_API_KEY = os.getenv("MONGODB_API_KEY")
 
 
 @app.route('/submit-form', methods=['POST'])
 def submit_form():
-    # Check if the request method is POST
-    if request.method != 'POST':
-        abort(405)  # Method not allowed
-
-    # Check if the request contains JSON data
-    if not request.is_json:
-        abort(400)  # Bad request
-
     try:
+        # Check if the request method is POST
+        if request.method != 'POST':
+            abort(405)  # Method not allowed
+
+        # Check if the request contains JSON data
+        if not request.is_json:
+            abort(400)  # Bad request
+
         # Parse JSON data from the request
         data = request.get_json()
 
@@ -51,11 +52,25 @@ def submit_form():
         parsed_data['submissionID'] = submission_id
         parsed_data['webhookURL'] = webhook_url
 
-        # Convert the dictionary to JSON format
-        json_data = json.dumps(parsed_data, indent=4)
+        # Make API request to MongoDB Atlas API
+        response = requests.post(
+            f"{MONGODB_API_URL}/insertOne",
+            json={
+                "dataSource": "testimonialGenerator",
+                "database": "tpc_survey_f1",
+                "collection": "cyclic_server",
+                "document": parsed_data
+            },
+            headers={"Content-Type": "application/json",
+                     "api-key": MONGODB_API_KEY}
+        )
 
-        # Return the JSON data as the response
-        return json_data, 200
+        # Check if the MongoDB API request was successful
+        if response.status_code in [200, 201]:
+            return "Data successfully inserted into MongoDB", response.status_code
+        else:
+            return f"Error inserting data into MongoDB: {response.text}", response.status_code
+
     except Exception as e:
         # Return an error response if there's an exception
         return f"Error processing request: {e}", 500
