@@ -54,8 +54,11 @@ def submit_form():
             'prettyData': pretty_data
         }
 
-        # # Parse 'prettyData'
-        # parsed_data = parse_pretty_data(pretty_data)
+        # Parse 'prettyData'
+        parsed_data = parse_pretty_data(pretty_data)
+
+        # Update 'data' dictionary with parsed data
+        data['parsedData'] = parsed_data
 
         # Print the JSON data
         print(data)
