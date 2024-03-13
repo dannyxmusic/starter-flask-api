@@ -1,5 +1,4 @@
 from flask import Flask, request
-import re
 
 app = Flask(__name__)
 
@@ -13,11 +12,21 @@ def submit_form():
         webhook_url = request.form.get('webhookURL')
         pretty_data = request.form.get('pretty')
 
-        # Split the data into key-value pairs
-        pairs = [pair.split(':') for pair in pretty_data.split(', ')]
+        # Split the pretty_data string by commas to separate the pairs
+        pairs = pretty_data.split(', ')
 
-        # Create a dictionary from the pairs
-        parsed_data = {key.strip(): value.strip() for key, value in pairs}
+        # Initialize an empty dictionary to store the question-response pairs
+        parsed_data = {}
+
+        # Iterate through the pairs
+        for pair in pairs:
+            # Split each pair by the colon to extract the key-value pair
+            key, value = pair.split(':', 1)  # Split by first colon only
+            # Remove any leading/trailing whitespace from the key and value
+            key = key.strip()
+            value = value.strip()
+            # Add the key-value pair to the dictionary
+            parsed_data[key] = value
 
         # Add formID, submissionID, and webhookURL to the parsed data
         parsed_data['formID'] = form_id
