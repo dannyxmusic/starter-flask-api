@@ -1,15 +1,18 @@
-import os
-import requests
+import pymongo
 from flask import Flask, request
 
 app = Flask(__name__)
 
-# # Load environment variables from .env file
-# load_dotenv("process.env")
+uri = f"mongodb+srv://mongodb+srv://therealdannyx:Ba7n48BQS8jiwPQd@testimonialGenerator/tpc_survey_f1?authSource=$external&authMechanism=PLAIN"
 
-# Define MongoDB Atlas API URL and API key
-MONGODB_API_URL = os.getenv("MONGODB_API_URL")
-MONGODB_API_KEY = os.getenv("MONGODB_API_KEY")
+# Create a MongoClient instance
+client = pymongo.MongoClient(uri)
+
+# Access a specific database
+db = client['tpc_survey_f1']
+
+# Access a specific collection
+collection = db['cyclic_server']
 
 
 def parse_pretty_data(pretty_data):
@@ -82,28 +85,24 @@ def submit_form():
         # Print the JSON data
         print(data)
 
-        # Make API request to MongoDB Atlas API
-        response = requests.post(
-            f"{MONGODB_API_URL}/insertOne",
-            json={
-                "dataSource": "testimonialGenerator",
-                "database": "tpc_survey_f1",
-                "collection": "cyclic_server",
-                "document": data
-            },
-            headers={"Content-Type": "application/json",
-                     "api-key": MONGODB_API_KEY}
-        )
+        # Insert the document into the collection
+        result = collection.insert_one(data)
 
-        # Check if the MongoDB API request was successful
-        if response.status_code in [200, 201]:
-            return "Data successfully inserted into MongoDB", response.status_code
+        # Check if the insertion was successful
+        if result.inserted_id:
+            return "Data successfully inserted into MongoDB", 201
         else:
-            return f"Error inserting data into MongoDB: {response.text}", response.status_code
+            return "Failed to insert data into MongoDB", 500
 
     except Exception as e:
-        # Return an error response if there's an exception
-        return f"Error processing request: {e}", 500
+        # Log the error
+        print('An error occurred:', e)
+        # Return an error response
+        return 'An error occurred while processing the data.', 500
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
 if __name__ == '__main__':
