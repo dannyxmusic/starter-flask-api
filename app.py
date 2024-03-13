@@ -13,22 +13,11 @@ def submit_form():
         webhook_url = request.form.get('webhookURL')
         pretty_data = request.form.get('pretty')
 
-        # Define a regular expression pattern to match each question-response pair
-        pattern = r'([^,]+?):([^,]+?)(?=,\s*[^:,]+:|$)'
+        # Split the data into key-value pairs
+        pairs = [pair.split(':') for pair in pretty_data.split(', ')]
 
-        # Extract question-response pairs using the regular expression
-        pairs = re.findall(pattern, pretty_data)
-
-        # Initialize an empty dictionary to store the question-response pairs
-        parsed_data = {}
-
-        # Iterate through the pairs
-        for pair in pairs:
-            # Remove any leading/trailing whitespace from the question and response
-            question = pair[0].strip()
-            response = pair[1].strip()
-            # Add the question-response pair to the dictionary
-            parsed_data[question] = response
+        # Create a dictionary from the pairs
+        parsed_data = {key.strip(): value.strip() for key, value in pairs}
 
         # Add formID, submissionID, and webhookURL to the parsed data
         parsed_data['formID'] = form_id
