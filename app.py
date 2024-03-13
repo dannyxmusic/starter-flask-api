@@ -1,12 +1,11 @@
 import os
 import requests
-from dotenv import load_dotenv
 from flask import Flask, request
 
 app = Flask(__name__)
 
-# Load environment variables from .env file
-load_dotenv("process.env")
+# # Load environment variables from .env file
+# load_dotenv("process.env")
 
 # Define MongoDB Atlas API URL and API key
 MONGODB_API_URL = os.getenv("MONGODB_API_URL")
