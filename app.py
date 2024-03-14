@@ -6,6 +6,9 @@ import pymongo
 
 app = Flask(__name__)
 
+# MongoDB API key fetched from environment variables
+mongodb_api_key = os.environ.get('MONGODB_API_KEY')
+
 
 def parse_pretty_data(pretty_data):
     # Define the list of questions
@@ -75,7 +78,7 @@ def submit_form():
         data.update(parsed_data)
 
         # Print the JSON data
-        print(data)
+        print(mongodb_api_key)
 
         # # Make API request to MongoDB Atlas API
         # response = requests.post(
