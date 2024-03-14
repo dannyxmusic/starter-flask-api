@@ -5,8 +5,7 @@ from flask import Flask
 app = Flask(__name__)
 
 # MongoDB connection URI
-MONGO_URI = os.environ.get(
-    "mongodb+srv://therealdannyx:dHMU3gO9o2vOrcPZ@testimonialgenerator.uz0hyl6.mongodb.net/?retryWrites=true&w=majority&appName=testimonialGenerator")
+MONGO_URI = os.environ.get('MONGO_URI')
 
 # Create a MongoClient instance
 client = pymongo.MongoClient(MONGO_URI)
