@@ -140,13 +140,12 @@ def process_openai(insert_id, data):
         content = next(iter(item))
         response = item[content]
 
-        # Remove leading spaces and line breaks from the AI's response
         if response.startswith("AI: "):
-            # Remove "AI: " and strip leading/trailing spaces
-            response = response[4:].strip()
-        elif response.startswith("\nAI:"):
-            # Remove leading line breaks and "AI:" and strip leading/trailing spaces
-            response = response[5:].strip()
+            # Remove "AI: " and strip leading/trailing spaces and line breaks
+            response = response[4:].lstrip().rstrip('\n')
+        elif response.startswith("\nAI: "):
+            # Remove "\nAI: " and strip leading/trailing spaces and line breaks
+            response = response[5:].lstrip().rstrip('\n')
 
         # Store the content and response as key-value pairs
         cleaned_history[content] = response
