@@ -2,7 +2,7 @@ from operator import itemgetter
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
-from langchain_openai import ChatOpenAI, OpenAI
+from langchain_openai import OpenAI
 from langchain_core.messages import HumanMessage, AIMessage
 from bson import ObjectId
 import json
