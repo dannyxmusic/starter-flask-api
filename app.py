@@ -3,6 +3,8 @@ from pymongo.mongo_client import MongoClient
 import pymongo
 import os
 
+import requests
+
 app = Flask(__name__)
 
 # MongoDB API key fetched from environment variables
@@ -80,19 +82,21 @@ def submit_form():
         # Update 'data' dictionary with parsed data
         data.update(parsed_data)
 
-        # Create a MongoClient instance
-        client = pymongo.MongoClient(mongo_uri)
-
-        # Access a specific database
-        db = client['tpc_survey_f1']
-
-        # Access a specific collection
-        collection = db['cyclic_server']
-
-        result = collection.insert_one(data)
+        # # Make API request to MongoDB Atlas API
+        response = requests.post(
+            f"{mongodb_api_url}/insertOne",
+            json={
+                "dataSource": "testimonialGenerator",
+                "database": "tpc_survey_f1",
+                "collection": "cyclic_server",
+                "document": data
+            },
+            headers={"Content-Type": "application/json",
+                     "api-key": mongodb_api_key}
+        )
 
         # Simulate a successful response
-        return result, 200
+        return response, 200
 
     except Exception as e:
         # Return an error response if there's an exception
