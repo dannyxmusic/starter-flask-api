@@ -1,12 +1,18 @@
 from flask import Flask, request, jsonify
-import requests
+from pymongo import MongoClient
 import os
 
 app = Flask(__name__)
 
-# MongoDB API key fetched from environment variables
-mongodb_api_key = os.environ.get('MONGODB_API_KEY')
-mongodb_api_url = os.environ.get('MONGODB_API_URL')
+# MongoDB Atlas connection URI
+MONGO_URI = os.environ.get('MONGO_URI')
+
+# Connect to MongoDB Atlas
+client = MongoClient(MONGO_URI)
+
+# Access the database and collection
+db = client['tpc_survey_f1']
+collection = db['cyclic_server']
 
 
 def parse_pretty_data(pretty_data):
@@ -63,35 +69,22 @@ def submit_form():
         if not (form_id and submission_id and webhook_url and pretty_data):
             return 'One or more required fields are missing.', 400
 
-        # Construct a dictionary with the form data
-        data = {
-            'formID': form_id,
-            'submissionID': submission_id,
-            'webhookURL': webhook_url,
-        }
-
         # Parse 'prettyData'
         parsed_data = parse_pretty_data(pretty_data)
 
-        # Update 'data' dictionary with parsed data
-        data.update(parsed_data)
+        # Construct a document with the form data
+        document = {
+            'formID': form_id,
+            'submissionID': submission_id,
+            'webhookURL': webhook_url,
+            **parsed_data  # Add parsed data to the document
+        }
 
-        # Make API request to MongoDB Atlas API
-        response = requests.post(
-            f"{mongodb_api_url}/insertOne",
-            json={
-                "dataSource": "testimonialGenerator",
-                "database": "tpc_survey_f1",
-                "collection": "cyclic_server",
-                "document": data
-            },
-            headers={"Content-Type": "application/json",
-                     "api-key": mongodb_api_key
-                     }
-        )
+        # Insert document into MongoDB collection
+        result = collection.insert_one(document)
 
-        # Simulate a successful response
-        return jsonify(response.json()), 200
+        # Return a success response
+        return jsonify({'message': 'Document inserted successfully', 'inserted_id': str(result.inserted_id)}), 200
 
     except Exception as e:
         # Return an error response if there's an exception
@@ -99,4 +92,4 @@ def submit_form():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)  # Run the Flask app in debug mode
+    app.run(debug=True)
