@@ -80,7 +80,7 @@ def submit_form():
 
         # Make API request to MongoDB Atlas API
         response = requests.post(
-            f"{os.environ.get('MONGODB_API_URL')}/insertOne",
+            f"{mongodb_api_url}/insertOne",
             json={
                 "dataSource": "testimonialGenerator",
                 "database": "tpc_survey_f1",
@@ -88,7 +88,7 @@ def submit_form():
                 "document": data
             },
             headers={"Content-Type": "application/json",
-                     "api-key": os.environ.get('MONGODB_API_KEY')
+                     "api-key": mongodb_api_key
                      }
         )
 
