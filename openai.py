@@ -146,8 +146,9 @@ def process_openai(insert_id, data):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python openai.py <insert_id>")
+    if len(sys.argv) < 3:
+        print("Usage: python openai.py <insert_id> <data>")
         sys.exit(1)
     insert_id = sys.argv[1]
+    data = json.loads(sys.argv[2])
     process_openai(insert_id, data)
