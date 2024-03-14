@@ -1,6 +1,7 @@
 import sys
 import os
 import logging
+from bson import ObjectId
 from pymongo import MongoClient
 
 # Configure logging
@@ -17,15 +18,17 @@ def main():
         logger.error("Usage: python test.py <insert_id>")
         sys.exit(1)
 
-    insert_id = sys.argv[1]
-    logger.info(f"Insert ID received as command-line argument: {insert_id}")
+    object_id_str = sys.argv[1]
+    logger.info(
+        f"Insert ID received as command-line argument: {object_id_str}")
 
     # Access the database and collection
+    object_id = ObjectId(object_id_str)
     db = client['tpc_survey_f1']
     collection = db['cyclic_server']
 
     logger.info("Attempting to find document in MongoDB collection...")
-    document = collection.find_one({"_id": insert_id})
+    document = collection.find_one({"_id": object_id})
 
     if document:
         logger.info("Document found:")
