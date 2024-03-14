@@ -6,13 +6,6 @@ import pymongo
 
 app = Flask(__name__)
 
-load_dotenv()
-# MongoDB connection URI
-MONGO_URI = os.getenv('MONGO_URI')
-
-# Create a MongoClient instance
-client = pymongo.MongoClient(MONGO_URI)
-
 
 def parse_pretty_data(pretty_data):
     # Define the list of questions
@@ -84,18 +77,18 @@ def submit_form():
         # Print the JSON data
         print(data)
 
-        # # Make API request to MongoDB Atlas API
-        # response = requests.post(
-        #     f"{MONGODB_API_URL}/insertOne",
-        #     json={
-        #         "dataSource": "testimonialGenerator",
-        #         "database": "tpc_survey_f1",
-        #         "collection": "cyclic_server",
-        #         "document": data
-        #     },
-        #     headers={"Content-Type": "application/json",
-        #              "api-key": MONGODB_API_KEY}
-        # )
+        # Make API request to MongoDB Atlas API
+        response = requests.post(
+            f"{MONGODB_API_URL}/insertOne",
+            json={
+                "dataSource": "testimonialGenerator",
+                "database": "tpc_survey_f1",
+                "collection": "cyclic_server",
+                "document": data
+            },
+            headers={"Content-Type": "application/json",
+                     "api-key": MONGODB_API_KEY}
+        )
 
         # Simulate an error response
         return "An error occurred while processing the request.", 500
