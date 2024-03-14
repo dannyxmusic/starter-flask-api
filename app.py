@@ -71,11 +71,17 @@ def submit_form():
 
         result = collection.insert_one(document)
 
-        # Trigger openai.py with insert_id
-        subprocess.Popen(
-            ['python', OPENAI_SCRIPT_PATH, str(result.inserted_id)])
+        # Execute test.py and capture its output
+        test_process = subprocess.Popen(
+            ['python', TEST_SCRIPT_PATH, str(result.inserted_id)], stdout=subprocess.PIPE)
+        test_output, _ = test_process.communicate()
+        test_output = test_output.decode('utf-8').strip()
 
-        return jsonify({'message': 'Document inserted successfully', 'inserted_id': str(result.inserted_id)}), 200
+        return jsonify({
+            'message': 'Document inserted successfully',
+            'inserted_id': str(result.inserted_id),
+            'test_output': test_output  # Include the output of test.py in the JSON response
+        }), 200
 
     except KeyError as e:
         return jsonify({'error': f'Missing field: {str(e)}'}), 400
