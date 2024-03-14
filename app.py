@@ -71,7 +71,9 @@ def submit_form():
 
         result = collection.insert_one(document)
 
-        subprocess.run(['python', OPENAI_SCRIPT_PATH])
+        # Trigger openai.py with insert_id
+        subprocess.Popen(
+            ['python', OPENAI_SCRIPT_PATH, str(result.inserted_id)])
 
         return jsonify({'message': 'Document inserted successfully', 'inserted_id': str(result.inserted_id)}), 200
 
