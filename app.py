@@ -80,7 +80,6 @@ def submit_form():
         return jsonify({
             'message': 'Document inserted successfully',
             'inserted_id': str(result.inserted_id),
-            'test_output': test_output  # Include the output of test.py in the JSON response
         }), 200
 
     except KeyError as e:
