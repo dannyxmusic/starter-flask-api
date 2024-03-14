@@ -132,17 +132,18 @@ def process_openai(insert_id, data):
     conversationHistory_json = json.dumps(conversationHistory, indent=2)
 
     conversation_history = json.loads(conversationHistory_json)
-    cleaned_history = {}
 
+    cleaned_history = {}
     # Iterate over each item in the conversation history
     for item in conversation_history:
         # Extract the content and the corresponding response
         content = next(iter(item))
         response = item[content]
 
+        # Remove leading spaces and line breaks from the AI's response
         if response.startswith("AI: "):
-            # Remove leading spaces before "AI: " and strip leading/trailing spaces and line breaks
-            response = response.lstrip().rstrip('\n')
+            # Remove "AI: " and strip leading/trailing spaces
+            response = response[4:].strip()
 
         # Store the content and response as key-value pairs
         cleaned_history[content] = response
