@@ -31,7 +31,7 @@ def parse_pretty_data(pretty_data):
     ]
 
     extracted_data = {}
-    email = None
+    survey_responses = {}
 
     for i, question in enumerate(questions):
         if "Please Enter your Email Address" in question:
@@ -43,9 +43,14 @@ def parse_pretty_data(pretty_data):
         answer = pretty_data[pretty_data.find(
             question) + len(question):next_question_index]
         answer = answer.replace(":", "").replace(",", "").strip()
-        extracted_data[question] = answer
+
+        # Exclude email from survey responses
+        if "Please Enter your Email Address" not in question:
+            survey_responses[question] = answer
 
     extracted_data['email'] = email
+    extracted_data['survey_responses'] = survey_responses
+
     return extracted_data
 
 
