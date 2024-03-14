@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 import os
+import subprocess
 
 app = Flask(__name__)
 
@@ -11,6 +12,9 @@ client = MongoClient(MONGO_URI)
 # Access the database and collection
 db = client['tpc_survey_f1']
 collection = db['cyclic_server']
+
+# Path to the openai.py script
+OPENAI_SCRIPT_PATH = 'openai.py'
 
 
 def parse_pretty_data(pretty_data):
@@ -66,6 +70,8 @@ def submit_form():
         }
 
         result = collection.insert_one(document)
+
+        subprocess.run(['python', OPENAI_SCRIPT_PATH])
 
         return jsonify({'message': 'Document inserted successfully', 'inserted_id': str(result.inserted_id)}), 200
 
