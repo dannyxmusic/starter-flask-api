@@ -76,8 +76,6 @@ def submit_form():
         # Update 'data' dictionary with parsed data
         data.update(parsed_data)
 
-        print(f"{mongodb_api_url}/insertOne", "api-key =" f"{mongodb_api_key}")
-
         # Make API request to MongoDB Atlas API
         response = requests.post(
             f"{mongodb_api_url}/insertOne",
