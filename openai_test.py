@@ -49,7 +49,7 @@ def process_openai(insert_id, data):
 
     prompt2 = ChatPromptTemplate.from_messages(
         [
-            ("ai", "you analyze sentiment and return only a numerical value"),
+            ("ai", "analyze the sentiment and return only a numerical value"),
             MessagesPlaceholder(variable_name="history"),
             ("human", "{input}"),
         ]
@@ -85,7 +85,7 @@ def process_openai(insert_id, data):
     history = memory.load_memory_variables({})
 
     inputs = {
-        "input": "Gauge the sentiment and normalize. The response to (enter your email), (how many employees), and (please add additional feedback) are all user input. However all other survey questions are rated from very difficult to very easy, dissatisfied to very satisfied, and unlikely to very likely. Please refer to the survey responses and estimate a normalized sentiment value. Return the numerical value you've determined and no other context."}
+        "input": "Gauge the sentiment and normalize on a scale of 0-1.0. The response to (enter your email), (how many employees), and (please add additional feedback) are all user input. However all other survey questions are rated from very difficult to very easy, dissatisfied to very satisfied, and unlikely to very likely. Please refer to the survey responses and estimate a normalized sentiment value. Return the numerical value you've determined and no other context."}
     response = chain2.invoke(inputs)
 
     sentiment_temperature = response
@@ -95,7 +95,7 @@ def process_openai(insert_id, data):
     memory.load_memory_variables({})
 
     inputs = {
-        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 30-50 words long. Include the wording from the final survey question (please provide any additional feedback) to retain authenticity of the review."}
+        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 30-50 words long. Include the response from the final survey question (survey question containing = please provide any additional feedback) to retain authenticity of the review."}
     response = chain.invoke(inputs)
 
     memory.save_context(inputs, {"output": response})
@@ -103,7 +103,7 @@ def process_openai(insert_id, data):
     memory.load_memory_variables({})
 
     inputs = {
-        "input": "Write a testimonial from the perspective of the person who completed the survey. This testimonial should be 60-80 words long. Include the wording from the final survey question (please provide any additional feedback) to retain authenticity of the review."}
+        "input": "Write a testimonial from the perspective of the person who completed the survey. This testimonial should be 60-80 words long. Include the response from the final survey question (survey question containing = please provide any additional feedback) to retain authenticity of the review."}
     response = chain.invoke(inputs)
 
     memory.save_context(inputs, {"output": response})
@@ -111,7 +111,7 @@ def process_openai(insert_id, data):
     memory.load_memory_variables({})
 
     inputs = {
-        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 100 words or longer. Include the wording from the final survey question (please provide any additional feedback) to retain authenticity of the review. Be professional and detailed."}
+        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 100 words or longer. Include the response from the final survey question (survey question containing = please provide any additional feedback) to retain authenticity of the review."}
     response = chain.invoke(inputs)
 
     memory.save_context(inputs, {"output": response})
