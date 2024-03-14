@@ -19,7 +19,7 @@ collection = db['cyclic_server']
 # Define a route to check MongoDB connection and print documents
 
 
-@app.route('/')
+@app.route('/submit-form', methods=['POST'])
 def index():
     try:
         # Check if connected to MongoDB
