@@ -34,7 +34,7 @@ def main():
         logger.info("Document found:")
         logger.info(document)
     else:
-        logger.error(f"No document found with _id: {insert_id}")
+        logger.error(f"No document found with _id: {object_id}")
 
 
 if __name__ == "__main__":
