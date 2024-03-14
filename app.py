@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import requests
 from dotenv import load_dotenv
 import os
@@ -91,7 +91,7 @@ def submit_form():
         # )
 
         # Simulate an error response
-        return "An error occurred while processing the request.", 500
+        return jsonify(data), 200
 
     except Exception as e:
         # Return an error response if there's an exception
