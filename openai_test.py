@@ -9,6 +9,13 @@ import json
 import os
 import sys
 from pymongo import MongoClient
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)  # Set the logging level to INFO
+
+# Define the logger
+logger = logging.getLogger(__name__)
 
 # MongoDB Atlas connection URI
 MONGO_URI = os.environ.get('MONGO_URI')
@@ -115,6 +122,7 @@ def process_openai(insert_id, data):
     response = chain.invoke(inputs)
 
     memory.save_context(inputs, {"output": response})
+
     history = memory.load_memory_variables({})
 
     conversationHistory = []
@@ -126,7 +134,7 @@ def process_openai(insert_id, data):
             conversationHistory.append({content_key: f"Human: {content}"})
         elif isinstance(message, AIMessage):
             content = message.content
-            conversationHistory.append({content_key: f"AI: {content}"})
+            conversationHistory.append({content_key: f"{content}"})
 
     conversationHistory_json = json.dumps(conversationHistory, indent=2)
 
@@ -141,11 +149,15 @@ def process_openai(insert_id, data):
         response = item[content]
 
         # Remove any space before "AI: " and after "AI: " in the response
-        if content.startswith("AI: content") and response.startswith("AI: "):
-            response = "AI: " + response[4:].lstrip()
+        if content.startswith("AI: ") and response.startswith("AI: "):
+            # Remove "AI: " and strip leading/trailing spaces
+            response = response[4:].strip()
 
         # Store the cleaned content and response as key-value pairs
         cleaned_history[content] = response
+
+     # Print conversationHistory_json in the logger
+    logger.info("Conversation history JSON:\n%s", cleaned_history)
 
     try:
         # Update the original document with conversation history
