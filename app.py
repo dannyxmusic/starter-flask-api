@@ -1,6 +1,4 @@
 from flask import Flask, request, jsonify
-import requests
-from dotenv import load_dotenv
 import os
 import pymongo
 
@@ -77,28 +75,15 @@ def submit_form():
         # Update 'data' dictionary with parsed data
         data.update(parsed_data)
 
-        # Print the JSON data
+        # Print the MongoDB API key
         print(mongodb_api_key)
 
-        # # Make API request to MongoDB Atlas API
-        # response = requests.post(
-        #     f"{MONGODB_API_URL}/insertOne",
-        #     json={
-        #         "dataSource": "testimonialGenerator",
-        #         "database": "tpc_survey_f1",
-        #         "collection": "cyclic_server",
-        #         "document": data
-        #     },
-        #     headers={"Content-Type": "application/json",
-        #              "api-key": MONGODB_API_KEY}
-        # )
-
-        # Simulate an error response
+        # Simulate a successful response
         return jsonify(data), 200
 
     except Exception as e:
         # Return an error response if there's an exception
-        return f"Error processing request: {e}", 500
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
