@@ -131,9 +131,14 @@ def process_openai(insert_id, data):
 
     conversationHistory_json = json.dumps(conversationHistory, indent=2)
 
-    # Update the original document with conversation history
-    collection.update_one({"_id": insert_id}, {
-                          "$set": {"conversationHistory": conversationHistory}})
+    try:
+        # Update the original document with conversation history
+        collection.update_one({"_id": insert_id}, {
+                              "$set": {"conversationHistory": conversationHistory}})
+        print(f"Conversation history updated for document with _id {
+              insert_id}")
+    except Exception as e:
+        print(f"Error updating conversation history: {e}")
 
     print(conversationHistory_json)
 
