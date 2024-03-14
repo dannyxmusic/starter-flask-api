@@ -133,8 +133,9 @@ def process_openai(insert_id, data):
 
     formatted_history = {}
     for item in conversationHistory_json:
-        key = next(iter(item))  # Get the key (e.g., content1)
-        value = item[key]  # Get the corresponding value
+        item_dict = json.loads(item)  # Convert the string to a dictionary
+        key = next(iter(item_dict))  # Get the key (e.g., content1)
+        value = item_dict[key]  # Get the corresponding value
         # Remove "AI: " prefix and leading space from AI's response
         if value.startswith("AI: "):
             value = value[4:].lstrip()  # Remove "AI: " and leading space
