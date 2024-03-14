@@ -134,7 +134,7 @@ def process_openai(insert_id, data):
     try:
         # Update the original document with conversation history
         collection.update_one({"_id": insert_id}, {
-                              "$set": {"conversationHistory": conversationHistory}})
+                              "$set": {"conversationHistory": conversationHistory_json}})
         print(f"Conversation history updated for document with _id "
               f"{insert_id}")
 
