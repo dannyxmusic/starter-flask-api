@@ -1,9 +1,13 @@
+import logging
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 import os
 import subprocess
 
 app = Flask(__name__)
+
+# Set up logging
+logging.basicConfig(filename='flask.log', level=logging.INFO)
 
 # MongoDB Atlas connection URI
 MONGO_URI = os.environ.get('MONGO_URI')
