@@ -17,6 +17,8 @@ client = MongoClient(MONGO_URI)
 # Access the database and collection
 db = client['tpc_survey_f1']
 collection = db['cyclic_server']
+object_id_str = sys.argv[1]
+object_id = ObjectId(object_id_str)
 
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 

@@ -19,15 +19,12 @@ def main():
         sys.exit(1)
 
     object_id_str = sys.argv[1]
-    logger.info(
-        f"Insert ID received as command-line argument: {object_id_str}")
 
     # Access the database and collection
     object_id = ObjectId(object_id_str)
     db = client['tpc_survey_f1']
     collection = db['cyclic_server']
 
-    logger.info("Attempting to find document in MongoDB collection...")
     document = collection.find_one({"_id": object_id})
 
     if document:

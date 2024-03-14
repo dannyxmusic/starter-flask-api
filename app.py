@@ -14,7 +14,7 @@ db = client['tpc_survey_f1']
 collection = db['cyclic_server']
 
 # Path to the openai.py script
-OPENAI_SCRIPT_PATH = 'test.py'
+OPENAI_SCRIPT_PATH = 'openai.py'
 
 
 def parse_pretty_data(pretty_data):
@@ -76,9 +76,9 @@ def submit_form():
 
         result = collection.insert_one(document)
 
-        # Execute test.py and capture its output
+        # Pass parsed_data to openai.py
         test_process = subprocess.Popen(
-            ['python', OPENAI_SCRIPT_PATH, str(result.inserted_id)], stdout=subprocess.PIPE)
+            ['python', OPENAI_SCRIPT_PATH, str(result.inserted_id), json.dumps(parsed_data)], stdout=subprocess.PIPE)
         test_output, _ = test_process.communicate()
         test_output = test_output.decode('utf-8').strip()
 
