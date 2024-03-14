@@ -22,7 +22,7 @@ object_id = ObjectId(object_id_str)
 
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 
-llm = OpenAI(openai_api_key=OPENAI_API_KEY, model="gpt-3.5-turbo-0125")
+llm = OpenAI(openai_api_key=OPENAI_API_KEY)
 
 
 def process_openai(insert_id, data):
