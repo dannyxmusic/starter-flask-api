@@ -131,10 +131,27 @@ def process_openai(insert_id, data):
 
     conversationHistory_json = json.dumps(conversationHistory, indent=2)
 
+    conversation_history = json.loads(conversationHistory_json)
+    cleaned_history = {}
+
+    # Iterate over each item in the conversation history
+    for item in conversation_history:
+        # Extract the content and the corresponding response
+        content = next(iter(item))
+        response = item[content]
+
+        # Remove leading spaces and line breaks from the AI's response
+        if response.startswith("AI: "):
+            # Remove "AI: " and strip leading/trailing spaces
+            response = response[4:].strip()
+
+        # Store the content and response as key-value pairs
+        cleaned_history[content] = response
+
     try:
         # Update the original document with conversation history
         collection.update_one({"_id": insert_id}, {
-                              "$set": {"conversationHistory": conversationHistory_json}})
+                              "$set": {"conversationHistory": cleaned_history}})
         print(f"Conversation history updated for document with _id "
               f"{insert_id}")
 
