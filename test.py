@@ -25,7 +25,7 @@ def main():
     collection = db['cyclic_server']
 
     logger.info("Attempting to find document in MongoDB collection...")
-    document = collection.find_one("_id": { "$oid": insert_id})
+    document = collection.find_one({"_id": insert_id})
 
     if document:
         logger.info("Document found:")
