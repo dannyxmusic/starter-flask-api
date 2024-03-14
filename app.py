@@ -1,11 +1,11 @@
 from flask import Flask, request, jsonify
 import os
-import pymongo
 
 app = Flask(__name__)
 
 # MongoDB API key fetched from environment variables
 mongodb_api_key = os.environ.get('MONGODB_API_KEY')
+mongodb_api_url = os.environ.get('MONGODB_API_URL')
 
 
 def parse_pretty_data(pretty_data):
@@ -76,7 +76,7 @@ def submit_form():
         data.update(parsed_data)
 
         # Print the MongoDB API key
-        print(mongodb_api_key)
+        print(mongodb_api_url, mongodb_api_key)
 
         # Simulate a successful response
         return jsonify(data), 200
