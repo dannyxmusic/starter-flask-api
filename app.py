@@ -12,15 +12,6 @@ mongodb_api_url = os.environ.get('MONGODB_API_URL')
 # MongoDB connection URI
 mongo_uri = os.environ.get('MONGO_URI')
 
-# Create a MongoClient instance
-client = pymongo.MongoClient(mongo_uri)
-
-# Access a specific database
-db = client['tpc_survey_f1']
-
-# Access a specific collection
-collection = db['cyclic_server']
-
 
 def parse_pretty_data(pretty_data):
     # Define the list of questions
@@ -89,10 +80,19 @@ def submit_form():
         # Update 'data' dictionary with parsed data
         data.update(parsed_data)
 
-        print(mongo_uri)
+        # Create a MongoClient instance
+        client = pymongo.MongoClient(mongo_uri)
+
+        # Access a specific database
+        db = client['tpc_survey_f1']
+
+        # Access a specific collection
+        collection = db['cyclic_server']
+
+        result = collection.insert_one(data)
 
         # Simulate a successful response
-        return jsonify(data), 200
+        return result, 200
 
     except Exception as e:
         # Return an error response if there's an exception
