@@ -137,8 +137,9 @@ def process_openai(insert_id, data):
         # Update the original document with conversation history
         collection.update_one({"_id": insert_id}, {
                               "$set": {"conversationHistory": conversationHistory}})
-        print(f"Conversation history updated for document with _id {
-              insert_id}")
+        print(f"Conversation history updated for document with _id "
+              f"{insert_id}")
+
     except Exception as e:
         print(f"Error updating conversation history: {e}")
 
