@@ -26,7 +26,6 @@ def main():
 
     logger.info("Attempting to find document in MongoDB collection...")
     document = collection.find_one({"_id": {"$oid": f"{insert_id}"}})
-    {"_id": {"$oid": "[Execute previous nodes for preview]"}}
     if document:
         logger.info("Document found:")
         logger.info(document)
