@@ -89,7 +89,7 @@ def submit_form():
         # Update 'data' dictionary with parsed data
         data.update(parsed_data)
 
-        result = collection.insert_one(data)
+        print(mongo_uri)
 
         # Simulate a successful response
         return jsonify(data), 200
