@@ -1,18 +1,12 @@
 from flask import Flask, request, jsonify
-from pymongo.mongo_client import MongoClient
-import pymongo
-import os
-
 import requests
+import os
 
 app = Flask(__name__)
 
 # MongoDB API key fetched from environment variables
 mongodb_api_key = os.environ.get('MONGODB_API_KEY')
 mongodb_api_url = os.environ.get('MONGODB_API_URL')
-
-# MongoDB connection URI
-mongo_uri = os.environ.get('MONGO_URI')
 
 
 def parse_pretty_data(pretty_data):
@@ -82,7 +76,7 @@ def submit_form():
         # Update 'data' dictionary with parsed data
         data.update(parsed_data)
 
-        # # Make API request to MongoDB Atlas API
+        # Make API request to MongoDB Atlas API
         response = requests.post(
             f"{mongodb_api_url}/insertOne",
             json={
@@ -96,7 +90,7 @@ def submit_form():
         )
 
         # Simulate a successful response
-        return response, 200
+        return jsonify(response.json()), 200
 
     except Exception as e:
         # Return an error response if there's an exception
