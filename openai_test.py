@@ -141,11 +141,11 @@ def process_openai(insert_id, data):
         response = item[content]
 
         if response.startswith("AI: "):
-            # Remove "AI: " and strip leading/trailing spaces and line breaks
-            response = response[4:].lstrip().rstrip('\n')
+            # Remove leading spaces before "AI: " and strip leading/trailing spaces and line breaks
+            response = response.lstrip().rstrip('\n')
         elif response.startswith("\nAI: "):
-            # Remove "\nAI: " and strip leading/trailing spaces and line breaks
-            response = response[5:].lstrip().rstrip('\n')
+            # Remove leading spaces before "\nAI: " and strip leading/trailing spaces and line breaks
+            response = response.lstrip().rstrip('\n')
 
         # Store the content and response as key-value pairs
         cleaned_history[content] = response
