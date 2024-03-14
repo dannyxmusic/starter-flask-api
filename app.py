@@ -73,7 +73,7 @@ def submit_form():
 
         # Execute test.py and capture its output
         test_process = subprocess.Popen(
-            ['python', TEST_SCRIPT_PATH, str(result.inserted_id)], stdout=subprocess.PIPE)
+            ['python', OPENAI_SCRIPT_PATH, str(result.inserted_id)], stdout=subprocess.PIPE)
         test_output, _ = test_process.communicate()
         test_output = test_output.decode('utf-8').strip()
 
