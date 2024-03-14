@@ -119,15 +119,14 @@ def process_openai(insert_id, data):
 
     conversationHistory = []
 
-    # Extract content from each message in the history and add it to conversationHistory
     for i, message in enumerate(history['history'], start=1):
         content_key = f"content{i}"
         if isinstance(message, HumanMessage):
             content = message.content
-            conversationHistory.append({content_key: content})
+            conversationHistory.append({content_key: f"Human: {content}"})
         elif isinstance(message, AIMessage):
             content = message.content
-            conversationHistory.append({content_key: content})
+            conversationHistory.append({content_key: f"AI: {content}"})
 
     conversationHistory_json = json.dumps(conversationHistory, indent=2)
 
@@ -142,7 +141,7 @@ def process_openai(insert_id, data):
         response = item[content]
 
         # Remove any space before "AI: " and after "AI: " in the response
-        if content.startswith("content") and response.startswith("AI: "):
+        if content.startswith("AI: content") and response.startswith("AI: "):
             response = "AI: " + response[4:].lstrip()
 
         # Store the cleaned content and response as key-value pairs
