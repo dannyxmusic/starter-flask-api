@@ -7,6 +7,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 from bson import ObjectId
 import json
 import os
+import re
 import sys
 from pymongo import MongoClient
 import logging
