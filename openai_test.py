@@ -95,8 +95,6 @@ def process_openai(insert_id, data):
         "input": "Gauge the sentiment and normalize on a scale of 0-1.0. The response to (enter your email), (how many employees), and (please add additional feedback) are all user input. However all other survey questions are rated from very difficult to very easy, dissatisfied to very satisfied, and unlikely to very likely. Please refer to the survey responses and estimate a normalized sentiment value. Return the numerical value you've determined and no other context."}
     response = chain2.invoke(inputs)
 
-    sentiment_temperature = response
-
     memory.save_context(inputs, {"output": response})
 
     memory.load_memory_variables({})
@@ -140,9 +138,6 @@ def process_openai(insert_id, data):
 
     conversation_history = json.loads(conversationHistory_json)
 
-    # Log conversation_history and conversationHistory_json
-    logger.info("conversation_history: %s", conversation_history)
-
     cleaned_history = {}
 
     # Iterate over each item in the conversation history
@@ -183,7 +178,7 @@ def update_testimonials(insert_id):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Usage: python openai.py <insert_id> <data>")
+        print("Usage: python openai_test.py <insert_id> <data>")
         sys.exit(1)
     insert_id = sys.argv[1]
     data = json.loads(sys.argv[2])
