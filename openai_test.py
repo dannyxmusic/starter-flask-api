@@ -1,4 +1,5 @@
 from operator import itemgetter
+import random
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
@@ -41,6 +42,28 @@ def process_openai(insert_id, data):
         sys.exit(1)
 
     data_from_db = collection.find_one({"_id": insert_id})
+
+    # Retrieve all "_id" values from the collection
+    all_ids = [doc["_id"] for doc in collection2.find({}, {"_id": 1})]
+
+    # Randomly select two "_id" values from the list
+    random_ids = random.sample(all_ids, 2)
+
+    logging.info(f"Randomly selected IDs: {random_ids}")
+
+    def extract_content(doc):
+        return ' '.join([doc[key] for key in ["content6", "content8", "content10"]])
+
+    contents = []
+
+    # Iterate over the randomly selected IDs
+    for random_id in random_ids:
+        # Find document with the current random ID
+        document = collection2.find_one({"_id": random_id})
+        # Extract the content from the document
+        content = extract_content(document)
+        # Append the content to the list
+        contents.append(content)
 
     if not data_from_db:
         print(f"Document with _id {insert_id} not found.")
@@ -100,7 +123,7 @@ def process_openai(insert_id, data):
     memory.load_memory_variables({})
 
     inputs = {
-        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 30-50 words long. Include the response from the final survey question (survey question containing = please provide any additional feedback) to retain authenticity of the review. /n If the sentiment is below a 0.5 try to write with gracious feedback and a positive outlook for the company."}
+        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 30-50 words long. Include the response from the final survey question (survey question containing = please provide any additional feedback) to retain authenticity of the review. Review previous testimonials to avoid common language and create a unique testimony:" f"{contents}"}
     response = chain.invoke(inputs)
 
     memory.save_context(inputs, {"output": response})
@@ -108,7 +131,15 @@ def process_openai(insert_id, data):
     memory.load_memory_variables({})
 
     inputs = {
-        "input": "Write a testimonial from the perspective of the person who completed the survey. This testimonial should be 60-80 words long. Include the response from the final survey question (survey question containing = please provide any additional feedback) to retain authenticity of the review. /n If the sentiment is below a 0.5 try to write with gracious feedback and a positive outlook for the company."}
+        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 30-50 words long. Include the response from the final survey question (survey question containing = please provide any additional feedback) to retain authenticity of the review. /n Review previous testimonials to avoid common language and create a unique testimony:" f"{contents}"}
+    response = chain.invoke(inputs)
+
+    memory.save_context(inputs, {"output": response})
+
+    memory.load_memory_variables({})
+
+    inputs = {
+        "input": "Write a testimonial from the perspective of the person who completed the survey. This testimonial should be 60-80 words long. Include the response from the final survey question (survey question containing = please provide any additional feedback) to retain authenticity of the review. /n Review previous testimonials to avoid common language and create a unique testimony:" f"{contents}"}
     response = chain.invoke(inputs)
 
     memory.save_context(inputs, {"output": response})
