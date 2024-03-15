@@ -145,7 +145,7 @@ def process_openai(insert_id, data):
 
     # Fixing the issues in the data
     fixed_data = {}
-    for key, value in cleaned_history.items():
+    for key, value in conversation_history.items():
         # Remove leading and trailing whitespace
         value = value.strip()
 
