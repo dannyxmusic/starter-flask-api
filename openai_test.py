@@ -52,7 +52,7 @@ def process_openai(insert_id, data):
     logging.info(f"Randomly selected IDs: {random_ids}")
 
     def extract_content(doc):
-        return ' '.join([doc[key] for key in ["content6", "content8", "content10"]])
+        return ' '.join([doc[key] for key in ["content8", "content10", "content12"]])
 
     contents = []
 
