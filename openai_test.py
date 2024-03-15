@@ -8,7 +8,6 @@ from bson import ObjectId
 import json
 import os
 import sys
-import re
 from pymongo import MongoClient
 import logging
 
@@ -144,8 +143,8 @@ def process_openai(insert_id, data):
     cleaned_history = {}
 
     # Fixing the issues in the data
-    cleaned_history = {}
-    for key, value in conversation_history.items():
+    fixed_data = {}
+    for key, value in cleaned_history.items():
         # Remove leading and trailing whitespace
         value = value.strip()
 
@@ -157,19 +156,39 @@ def process_openai(insert_id, data):
             value = 'AI: ' + value.strip()
 
         # Store the cleaned content and response as key-value pairs
-        cleaned_history[key] = value
+        cleaned_history[content] = response
 
-    # Print conversationHistory_json in the logger
+     # Print conversationHistory_json in the logger
     logger.info("Conversation history JSON:\n%s", cleaned_history)
+
+    data = cleaned_history
+
+    # Fixing the issues in the data
+    fixed_data = {}
+    for key, value in data.items():
+        # Remove leading and trailing whitespace
+        value = value.strip()
+
+        # Check if the key corresponds to content2, content4, content6, content8, or content10
+        if key in ['content2', 'content4', 'content6', 'content8', 'content10']:
+            # Remove any occurrences of 'AI:' followed by whitespace or newline characters
+            value = re.sub(r'AI:\s*', '', value)
+            # Insert 'AI: ' at the beginning
+            value = 'AI: ' + value.strip()
+
+        fixed_data[key] = value
 
     try:
         # Update the original document with conversation history
         collection.update_one({"_id": insert_id}, {
-                              "$set": {"conversationHistory": cleaned_history}})
-        logger.info(
-            f"Conversation history updated for document with _id {insert_id}")
+                              "$set": {"conversationHistory": fixed_data}})
+        print(f"Conversation history updated for document with _id "
+              f"{insert_id}")
+
     except Exception as e:
-        logger.error(f"Error updating conversation history: {e}")
+        print(f"Error updating conversation history: {e}")
+
+    print(conversationHistory_json)
 
 
 if __name__ == "__main__":
