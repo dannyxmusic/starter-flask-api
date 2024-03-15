@@ -6,6 +6,7 @@ from langchain_openai import OpenAI
 from langchain_core.messages import HumanMessage, AIMessage
 from bson import ObjectId
 import json
+import re
 import os
 import sys
 from pymongo import MongoClient
@@ -140,7 +141,6 @@ def process_openai(insert_id, data):
 
     # Log conversation_history and conversationHistory_json
     logger.info("conversation_history: %s", conversation_history)
-    logger.info("conversationHistory_json: %s", conversationHistory_json)
 
     cleaned_history = {}
 
