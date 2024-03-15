@@ -146,17 +146,18 @@ def process_openai(insert_id, data):
 
     # Iterate over each item in the conversation history
     for item in conversation_history:
-        # Extract the content and the corresponding response
-        content = next(iter(item))
-        response = item[content]
+        key = next(iter(item))  # Get the key of the dictionary
+        # Get the value and remove leading/trailing whitespace
+        value = item[key].strip()
 
-        # Remove any space before "AI: " and after "AI: " in the response
-        if content.startswith("AI: ") and response.startswith("AI: "):
-            # Remove "AI: " and strip leading/trailing spaces
-            response = response[4:].strip()
+        # Check if the key corresponds to content2, content4, content6, content8, or content10
+        if key in ['content2', 'content4', 'content6', 'content8', 'content10']:
+            # Remove any occurrences of 'AI:' followed by whitespace or newline characters
+            value = re.sub(r'AI:\s*', '', value)
+            # Insert 'AI: ' at the beginning
+            value = 'AI: ' + value.strip()
 
-        # Store the cleaned content and response as key-value pairs
-        cleaned_history[content] = response
+        cleaned_history[key] = value
 
     try:
         # Update the original document with conversation history
