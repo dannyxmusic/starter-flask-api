@@ -199,9 +199,9 @@ def update_testimonials(insert_id):
     result = collection.find_one({"_id": object_id})
 
     filtered_response = {
-        "content6": result.get("conversationHistory", {}).get("content6"),
         "content8": result.get("conversationHistory", {}).get("content8"),
         "content10": result.get("conversationHistory", {}).get("content10"),
+        "content12": result.get("conversationHistory", {}).get("content12"),
         "submissionID": result.get("submissionID")
     }
     result = collection2.insert_one(filtered_response)
