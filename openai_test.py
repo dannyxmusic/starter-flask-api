@@ -23,6 +23,7 @@ client = MongoClient(MONGO_URI)
 # Access the database and collection
 db = client['tpc_survey_f1']
 collection = db['cyclic_server']
+collection2 = db['survey1_testimonials']
 object_id_str = sys.argv[1]
 object_id = ObjectId(object_id_str)
 
@@ -163,12 +164,20 @@ def process_openai(insert_id, data):
         # Update the original document with conversation history
         collection.update_one({"_id": insert_id}, {
                               "$set": {"conversationHistory": cleaned_history}})
-        logger.info(
-            f"Conversation history updated for document with _id {insert_id}")
 
     except Exception as e:
         logger.error(f"Error updating conversation history: {e}")
 
+def update_testimonials(insert_id)
+    result = collection.find_one({"_id": object_id})
+
+    filtered_response = {
+    "content6": result.get("conversationHistory", {}).get("content6"),
+    "content8": result.get("conversationHistory", {}).get("content8"),
+    "content10": result.get("conversationHistory", {}).get("content10"),
+    "submissionID": result.get("submissionID")
+}
+    result = collection2.insert_one(filtered_response)
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
@@ -177,3 +186,4 @@ if __name__ == "__main__":
     insert_id = sys.argv[1]
     data = json.loads(sys.argv[2])
     process_openai(insert_id, data)
+    update_testimonials(insert_id)
