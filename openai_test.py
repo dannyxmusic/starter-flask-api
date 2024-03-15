@@ -1,5 +1,4 @@
 from operator import itemgetter
-from fastapi import logger
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
@@ -11,6 +10,10 @@ import os
 import sys
 from pymongo import MongoClient
 import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # MongoDB Atlas connection URI
 MONGO_URI = os.environ.get('MONGO_URI')
