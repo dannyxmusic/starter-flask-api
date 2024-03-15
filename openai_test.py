@@ -168,16 +168,18 @@ def process_openai(insert_id, data):
     except Exception as e:
         logger.error(f"Error updating conversation history: {e}")
 
-def update_testimonials(insert_id)
+
+def update_testimonials(insert_id):
     result = collection.find_one({"_id": object_id})
 
     filtered_response = {
-    "content6": result.get("conversationHistory", {}).get("content6"),
-    "content8": result.get("conversationHistory", {}).get("content8"),
-    "content10": result.get("conversationHistory", {}).get("content10"),
-    "submissionID": result.get("submissionID")
-}
+        "content6": result.get("conversationHistory", {}).get("content6"),
+        "content8": result.get("conversationHistory", {}).get("content8"),
+        "content10": result.get("conversationHistory", {}).get("content10"),
+        "submissionID": result.get("submissionID")
+    }
     result = collection2.insert_one(filtered_response)
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
