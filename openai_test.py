@@ -144,6 +144,7 @@ def process_openai(insert_id, data):
     cleaned_history = {}
 
     # Fixing the issues in the data
+    cleaned_history = {}
     for key, value in conversation_history.items():
         # Remove leading and trailing whitespace
         value = value.strip()
@@ -165,10 +166,10 @@ def process_openai(insert_id, data):
         # Update the original document with conversation history
         collection.update_one({"_id": insert_id}, {
                               "$set": {"conversationHistory": cleaned_history}})
-        print(f"Conversation history updated for document with _id {
-              insert_id}")
+        logger.info(
+            f"Conversation history updated for document with _id {insert_id}")
     except Exception as e:
-        print(f"Error updating conversation history: {e}")
+        logger.error(f"Error updating conversation history: {e}")
 
 
 if __name__ == "__main__":
