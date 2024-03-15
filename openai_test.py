@@ -138,8 +138,9 @@ def process_openai(insert_id, data):
 
     conversation_history = json.loads(conversationHistory_json)
 
-    logger.info("conversation_history", conversation_history)
-    logger.info("conversationHistory_json", conversationHistory_json)
+    # Log conversation_history and conversationHistory_json
+    logger.info("conversation_history: %s", conversation_history)
+    logger.info("conversationHistory_json: %s", conversationHistory_json)
 
     cleaned_history = {}
 
@@ -161,13 +162,11 @@ def process_openai(insert_id, data):
         # Update the original document with conversation history
         collection.update_one({"_id": insert_id}, {
                               "$set": {"conversationHistory": cleaned_history}})
-        print(f"Conversation history updated for document with _id "
-              f"{insert_id}")
+        logger.info(
+            f"Conversation history updated for document with _id {insert_id}")
 
     except Exception as e:
-        print(f"Error updating conversation history: {e}")
-
-    print(conversationHistory_json)
+        logger.error(f"Error updating conversation history: {e}")
 
 
 if __name__ == "__main__":
