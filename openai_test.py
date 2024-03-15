@@ -131,7 +131,7 @@ def process_openai(insert_id, data):
     memory.load_memory_variables({})
 
     inputs = {
-        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 30-50 words long. Include the response from the final survey question (survey question containing = please provide any additional feedback) to retain authenticity of the review. /n Review previous testimonials and use unique language in your new generation. Previous testimonies:" f"{contents}"}
+        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 30-50 words long. Include the response from the final survey question (survey question containing = please provide any additional feedback) to retain authenticity of the review."}
     response = chain.invoke(inputs)
 
     memory.save_context(inputs, {"output": response})
