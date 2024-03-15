@@ -1,4 +1,5 @@
 from operator import itemgetter
+from fastapi import logger
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
@@ -7,16 +8,9 @@ from langchain_core.messages import HumanMessage, AIMessage
 from bson import ObjectId
 import json
 import os
-import re
 import sys
 from pymongo import MongoClient
 import logging
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)  # Set the logging level to INFO
-
-# Define the logger
-logger = logging.getLogger(__name__)
 
 # MongoDB Atlas connection URI
 MONGO_URI = os.environ.get('MONGO_URI')
@@ -141,38 +135,36 @@ def process_openai(insert_id, data):
 
     conversation_history = json.loads(conversationHistory_json)
 
+    logger.info("conversation_history", conversation_history)
+    logger.info("conversationHistory_json", conversationHistory_json)
+
     cleaned_history = {}
 
-    # Fixing the issues in the data
-    fixed_data = {}
-    for key, value in conversation_history.items():
-        # Remove leading and trailing whitespace
-        value = value.strip()
+    # Iterate over each item in the conversation history
+    for item in conversation_history:
+        # Extract the content and the corresponding response
+        content = next(iter(item))
+        response = item[content]
 
-        # Check if the key corresponds to content2, content4, content6, content8, or content10
-        if key in ['content2', 'content4', 'content6', 'content8', 'content10']:
-            # Remove any occurrences of 'AI:' followed by whitespace or newline characters
-            value = re.sub(r'AI:\s*', '', value)
-            # Insert 'AI: ' at the beginning
-            value = 'AI: ' + value.strip()
+        # Remove any space before "AI: " and after "AI: " in the response
+        if content.startswith("AI: ") and response.startswith("AI: "):
+            # Remove "AI: " and strip leading/trailing spaces
+            response = response[4:].strip()
 
         # Store the cleaned content and response as key-value pairs
         cleaned_history[content] = response
 
-     # Print conversationHistory_json in the logger
-    logger.info("Conversation history JSON:\n%s", cleaned_history)
-
-    data = cleaned_history
-
     try:
         # Update the original document with conversation history
         collection.update_one({"_id": insert_id}, {
-                              "$set": {"conversationHistory": data}})
+                              "$set": {"conversationHistory": cleaned_history}})
         print(f"Conversation history updated for document with _id "
               f"{insert_id}")
 
     except Exception as e:
         print(f"Error updating conversation history: {e}")
+
+    print(conversationHistory_json)
 
 
 if __name__ == "__main__":
