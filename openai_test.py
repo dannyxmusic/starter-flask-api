@@ -164,25 +164,10 @@ def process_openai(insert_id, data):
 
     data = cleaned_history
 
-    # Fixing the issues in the data
-    fixed_data = {}
-    for key, value in data.items():
-        # Remove leading and trailing whitespace
-        value = value.strip()
-
-        # Check if the key corresponds to content2, content4, content6, content8, or content10
-        if key in ['content2', 'content4', 'content6', 'content8', 'content10']:
-            # Remove any occurrences of 'AI:' followed by whitespace or newline characters
-            value = re.sub(r'AI:\s*', '', value)
-            # Insert 'AI: ' at the beginning
-            value = 'AI: ' + value.strip()
-
-        fixed_data[key] = value
-
     try:
         # Update the original document with conversation history
         collection.update_one({"_id": insert_id}, {
-                              "$set": {"conversationHistory": fixed_data}})
+                              "$set": {"conversationHistory": data})
         print(f"Conversation history updated for document with _id "
               f"{insert_id}")
 
