@@ -1,10 +1,16 @@
 import json
-from flask import Flask, request, jsonify
-from pymongo import MongoClient
+import logging
 import os
 import subprocess
 
+from flask import Flask, request, jsonify
+from pymongo import MongoClient
+
 app = Flask(__name__)
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # MongoDB Atlas connection URI
 MONGO_URI = os.environ.get('MONGO_URI')
@@ -19,6 +25,15 @@ OPENAI_SCRIPT_PATH = 'openai_tg.py'
 
 
 def parse_pretty_data(pretty_data):
+    """
+    Parse the pretty data received from the form submission.
+
+    Args:
+        pretty_data (str): The pretty-formatted data received from the form.
+
+    Returns:
+        dict: A dictionary containing the parsed data.
+    """
     questions = [
         "Please Enter your Email Address",
         "How would you rate the ease of transitioning and implementation to TPC's services from your previous payroll provider?",
@@ -57,11 +72,14 @@ def parse_pretty_data(pretty_data):
 
 @app.route('/submit-form', methods=['POST'])
 def submit_form():
+    """
+    Endpoint to handle form submissions.
+    """
     try:
-        form_id = request.form.get('formID', None)
-        submission_id = request.form.get('submissionID', None)
-        webhook_url = request.form.get('webhookURL', None)
-        pretty_data = request.form.get('pretty', None)
+        form_id = request.form.get('formID')
+        submission_id = request.form.get('submissionID')
+        webhook_url = request.form.get('webhookURL')
+        pretty_data = request.form.get('pretty')
 
         if not all([form_id, submission_id, webhook_url, pretty_data]):
             return 'One or more required fields are missing.', 400
@@ -89,9 +107,11 @@ def submit_form():
         }), 200
 
     except KeyError as e:
+        logger.error(f'Missing field: {str(e)}')
         return jsonify({'error': f'Missing field: {str(e)}'}), 400
 
     except Exception as e:
+        logger.exception(f'An error occurred: {str(e)}')
         return jsonify({'error': str(e)}), 500
 
 

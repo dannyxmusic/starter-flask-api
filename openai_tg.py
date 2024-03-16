@@ -133,7 +133,8 @@ def process_openai(insert_id, data):
     memory.load_memory_variables({})
 
     inputs = {
-        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 30-50 words long. Do not state that you recently completed a survey."}
+        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 30-50 words long. Do not state that you recently completed a survey. Avoid using phrasing from the recurring phrases review. Each testimony should be unique while portraying the correct sentiment."}
+
     response = chain.invoke(inputs)
 
     memory.save_context(inputs, {"output": response})
@@ -141,7 +142,8 @@ def process_openai(insert_id, data):
     memory.load_memory_variables({})
 
     inputs = {
-        "input": "Write a testimonial from the perspective of the person who completed the survey. This testimonial should be 60-80 words long. Do not state that you recently completed a survey."}
+        "input": "Write a testimonial from the perspective of the person who completed the survey. This testimonial should be 60-80 words long. Do not state that you recently completed a survey.Avoid using phrasing from the recurring phrases review. Each testimony should be unique while portraying the correct sentiment."}
+
     response = chain.invoke(inputs)
 
     memory.save_context(inputs, {"output": response})
@@ -149,7 +151,8 @@ def process_openai(insert_id, data):
     memory.load_memory_variables({})
 
     inputs = {
-        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 100 words or longer. Do not state that you recently completed a survey"}
+        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 100 words or longer. Do not state that you recently completed a survey. Avoid using phrasing from the recurring phrases review. Each testimony should be unique while portraying the correct sentiment."}
+
     response = chain.invoke(inputs)
 
     memory.save_context(inputs, {"output": response})
