@@ -33,6 +33,7 @@ db = client['tpc_survey_f1']
 collection = db['cyclic_server']
 collection2 = db['survey1_testimonials']
 object_id = sys.argv[1]
+objectId = ObjectId(object_id)
 
 
 def extract_content(doc):
@@ -41,7 +42,7 @@ def extract_content(doc):
 
 
 # Find document with the current random ID
-document = collection.find_one({"_id": object_id})
+document = collection.find_one({"_id": objectId})
 # Extract the content from the document
 content = extract_content(document)
 

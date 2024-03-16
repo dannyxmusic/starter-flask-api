@@ -219,4 +219,4 @@ if __name__ == "__main__":
     update_testimonials(insert_id)
     # Call the email.py script
     email_script_path = 'email.py'  # Adjust this path if necessary
-    subprocess.run(['python', EMAIL_SCRIPT_PATH, object_id])
+    subprocess.run(['python', EMAIL_SCRIPT_PATH, object_id_str])
