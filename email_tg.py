@@ -38,19 +38,25 @@ objectId = ObjectId(object_id)
 
 def extract_content(doc):
     conversation_history = doc.get('conversationHistory', {})
-    return [conversation_history.get(key, '') for key in ["content8", "content10", "content12"]]
+    email_address = doc.get('email', '')
+    content_keys = ["content8", "content10", "content12"]
+    content_values = [conversation_history.get(
+        key, '') for key in content_keys]
+    return email_address, content_values
 
 
 # Find document with the current random ID
 document = collection.find_one({"_id": objectId})
+
 # Extract the content from the document
-content = extract_content(document)
+email_address, content = extract_content(document)
 
 first_item = content[0]
 second_item = content[1]
 third_item = content[2]
 
 message = (
+    f"Email: {email_address}\n \n"
     f"Short Testimonial: {first_item}\n \n"
     f"Medium Testimonial: {second_item}\n \n"
     f"Long Testimonial: {third_item}"
