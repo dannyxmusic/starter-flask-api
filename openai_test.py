@@ -12,6 +12,7 @@ import os
 import sys
 from pymongo import MongoClient
 import logging
+import subprocess
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -29,6 +30,7 @@ object_id_str = sys.argv[1]
 object_id = ObjectId(object_id_str)
 
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+EMAIL_SCRIPT_PATH = 'email.py'
 
 llm = OpenAI(openai_api_key=OPENAI_API_KEY)
 
@@ -215,3 +217,6 @@ if __name__ == "__main__":
     data = json.loads(sys.argv[2])
     process_openai(insert_id, data)
     update_testimonials(insert_id)
+    # Call the email.py script
+    email_script_path = 'email.py'  # Adjust this path if necessary
+    subprocess.run(['python', EMAIL_SCRIPT_PATH, object_id])
