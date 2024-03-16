@@ -30,7 +30,7 @@ object_id_str = sys.argv[1]
 object_id = ObjectId(object_id_str)
 
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
-EMAIL_SCRIPT_PATH = 'email.py'
+EMAIL_SCRIPT_PATH = 'email_tg.py'
 
 llm = OpenAI(openai_api_key=OPENAI_API_KEY)
 
