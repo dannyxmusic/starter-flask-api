@@ -29,7 +29,7 @@ collection = db['cyclic_server']
 collection2 = db['survey1_testimonials']
 
 # Path to the email.py script
-EMAIL_SCRIPT_PATH = 'src/email_tg.py'
+EMAIL_SCRIPT_PATH = 'email_tg.py'
 
 # Path to the OpenAI API key
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
