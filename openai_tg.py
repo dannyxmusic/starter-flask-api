@@ -133,7 +133,7 @@ def process_openai(insert_id, data):
     memory.load_memory_variables({})
 
     inputs = {
-        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 30-50 words long. Include the response from the final survey question (survey question containing = please provide any additional feedback) to retain authenticity of the review."}
+        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 30-50 words long. Do not state that you recently completed a survey."}
     response = chain.invoke(inputs)
 
     memory.save_context(inputs, {"output": response})
@@ -141,7 +141,7 @@ def process_openai(insert_id, data):
     memory.load_memory_variables({})
 
     inputs = {
-        "input": "Write a testimonial from the perspective of the person who completed the survey. This testimonial should be 60-80 words long. Include the response from the final survey question (survey question containing = please provide any additional feedback) to retain authenticity of the review."}
+        "input": "Write a testimonial from the perspective of the person who completed the survey. This testimonial should be 60-80 words long. Do not state that you recently completed a survey."}
     response = chain.invoke(inputs)
 
     memory.save_context(inputs, {"output": response})
@@ -149,7 +149,7 @@ def process_openai(insert_id, data):
     memory.load_memory_variables({})
 
     inputs = {
-        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 100 words or longer. Include the response from the final survey question (survey question containing = please provide any additional feedback) to retain authenticity of the review."}
+        "input": "Write a testimonial from the perspective of the person who completed the survey. The testimonial should be 100 words or longer. Do not state that you recently completed a survey"}
     response = chain.invoke(inputs)
 
     memory.save_context(inputs, {"output": response})
