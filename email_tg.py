@@ -78,7 +78,7 @@ message_body = (
 
 message = EmailMessage()
 message.set_content(message_body)
-message["To"] = "sandagedaniel@gmail.com"
+message["To"] = "sandagedaniel@gmail.com, grant@thepayrollco.com"
 message["From"] = "therealdannyx@gmail.com"
 message["Subject"] = "Testimonial"
 
