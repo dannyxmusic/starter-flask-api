@@ -69,6 +69,8 @@ def append_testimonials(context, summary, short, medium, long, submission_id):
             "long_testimonial": long,
         }
 
+        logger.info(filtered_response)
+
         # Insert the document into MongoDB collection
         collection2.insert_one(filtered_response)
 
