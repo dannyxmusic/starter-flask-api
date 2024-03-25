@@ -115,8 +115,9 @@ def generate_testimonials(insert_id):
     chain3 = (prompt3 | model2 | output_parser)
 
     # Generate testimonials
-    inputs = {"input": f"Here is a survey with the '_id': {
-        objectId}. Please review the survey and confirm that you processed the data: Survey response = {survey_responses}"}
+    inputs = {"input": f"Here is a survey with the '_id': {objectId}. Please "
+              "review the survey and confirm that you processed the data: "
+              f"Survey response = {survey_responses}"}
 
     response = chain.invoke(inputs)
     memory.save_context(inputs, {"output": response})
