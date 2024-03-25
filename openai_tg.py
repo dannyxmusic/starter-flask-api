@@ -1,7 +1,5 @@
-import json
 import logging
 import os
-import re
 import subprocess
 import sys
 import random
@@ -12,7 +10,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
 from langchain_openai import ChatOpenAI
-from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.messages import HumanMessage
 from langchain_core.output_parsers import StrOutputParser
 from pymongo import MongoClient
 
