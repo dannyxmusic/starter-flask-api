@@ -21,7 +21,7 @@ db = client['tpc_survey_f1']
 collection = db['cyclic_server']
 
 # Path to the openai.py script
-OPENAI_SCRIPT_PATH = 'openai_tg.py'
+OPENAI_SCRIPT_PATH = 'openai_tg_copy.py'
 
 
 def parse_pretty_data(pretty_data):
@@ -39,6 +39,7 @@ def parse_pretty_data(pretty_data):
         "How would you rate the ease of transitioning and implementation to TPC's services from your previous payroll provider?",
         "How user-friendly do you find iSolved, TPC's HR and payroll software?",
         "Who was your previous Payroll Provider?",
+        "What field or industry does your company specialize in?"
         "How would you rate your satisfaction for TPC over your previous payroll provider?",
         "How would you rate your experience with TPC's customer service in addressing your inquiries and concerns?",
         "How many employees does your company currently process payroll for?",
@@ -96,8 +97,8 @@ def submit_form():
         result = collection.insert_one(document)
 
         # Pass parsed_data to openai.py
-        test_process = subprocess.Popen(
-            ['python', OPENAI_SCRIPT_PATH, str(result.inserted_id), json.dumps(parsed_data)], stdout=subprocess.PIPE)
+        test_process = subprocess.Popen(['python', OPENAI_SCRIPT_PATH, str(result.inserted_id)],
+                                        stdout=subprocess.PIPE)
         test_output, _ = test_process.communicate()
         test_output = test_output.decode('utf-8').strip()
 
