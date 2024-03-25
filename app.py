@@ -1,12 +1,19 @@
-import json
 import logging
 import os
 import subprocess
+from rq import Queue
+from redis import Redis
 
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 
 app = Flask(__name__)
+
+# Connect to Redis server
+redis_conn = Redis()
+
+# Create RQ queue
+queue = Queue(connection=redis_conn)
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -22,6 +29,21 @@ collection = db['cyclic_server']
 
 # Path to the openai.py script
 OPENAI_SCRIPT_PATH = 'openai_tg.py'
+
+
+def process_openai_task(inserted_id):
+    """
+    Function to process the openai.py script.
+    """
+    try:
+        test_process = subprocess.Popen(['python', OPENAI_SCRIPT_PATH, str(inserted_id)],
+                                        stdout=subprocess.PIPE)
+        test_output, _ = test_process.communicate()
+        test_output = test_output.decode('utf-8').strip()
+        # Handle output if needed
+    except Exception as e:
+        # Handle exceptions
+        pass
 
 
 def parse_pretty_data(pretty_data):
@@ -96,11 +118,8 @@ def submit_form():
 
         result = collection.insert_one(document)
 
-        # Pass parsed_data to openai.py
-        test_process = subprocess.Popen(['python', OPENAI_SCRIPT_PATH, str(result.inserted_id)],
-                                        stdout=subprocess.PIPE)
-        test_output, _ = test_process.communicate()
-        test_output = test_output.decode('utf-8').strip()
+        # Pass parsed_data to RQ queue for processing
+        queue.enqueue(process_openai_task, result.inserted_id)
 
         return jsonify({
             'message': 'Document inserted successfully',
@@ -110,10 +129,6 @@ def submit_form():
     except KeyError as e:
         logger.error(f'Missing field: {str(e)}')
         return jsonify({'error': f'Missing field: {str(e)}'}), 400
-
-    except Exception as e:
-        logger.exception(f'An error occurred: {str(e)}')
-        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
