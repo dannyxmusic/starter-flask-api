@@ -132,8 +132,6 @@ def process_openai(insert_id):
         # Append the content to the list
         contents.append(content)
 
-    logger.info(contents)
-
     # Run OpenAI models
     prompt1 = ChatPromptTemplate.from_messages([
         ("system", "You are an AI designed to assist in testimonial generation. I provide you survey results and you do 2 things; 1. analyze sentiment. 2. Detect recurring wordage or phrasing from previous testimonials."),
@@ -184,8 +182,6 @@ def process_openai(insert_id):
 
     history = memory.load_memory_variables({})
 
-    history = memory.load_memory_variables({})
-
     inputs = {
         "input": f"Please review the conversation history. conversation_history = {history}"
     }
@@ -209,12 +205,9 @@ def process_openai(insert_id):
 
     long_testimony = chain3.invoke(input3)
 
-    try:
-        # Update the original document with conversation history
-        append_testimonials(context=history, summary=summary, short=short_testimony,
-                            medium=medium_testimony, long=long_testimony, submission_id=submission_id)
-    except Exception as e:
-        logger.error(f"Error updating conversation history: {e}")
+    # Update the original document with conversation history
+    append_testimonials(context=history, summary=summary, short=short_testimony,
+                        medium=medium_testimony, long=long_testimony, submission_id=submission_id)
 
 
 def update_testimonials(insert_id):
