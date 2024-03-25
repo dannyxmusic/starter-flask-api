@@ -1,4 +1,4 @@
-import argparse
+import logging
 from operator import itemgetter
 import random
 import subprocess
@@ -12,6 +12,10 @@ from langchain_core.runnables import RunnableLambda, RunnablePassthrough
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.output_parsers import StrOutputParser
 from pymongo import MongoClient
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Initialize MongoDB client
 MONGO_URI = os.environ.get('MONGO_URI')
