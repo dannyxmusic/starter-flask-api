@@ -21,7 +21,7 @@ db = client['tpc_survey_f1']
 collection = db['cyclic_server']
 
 # Path to the openai.py script
-OPENAI_SCRIPT_PATH = 'openai_tg_copy.py'
+OPENAI_SCRIPT_PATH = 'open_tg_copy.py'
 
 
 def parse_pretty_data(pretty_data):
