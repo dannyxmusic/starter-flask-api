@@ -162,31 +162,13 @@ def generate_testimonials(insert_id):
     medium_testimony = chain3.invoke(input1)
 
     input2 = {
-        'input': f'Review the context: context={summary}. \nGenerate '
-        f'a 30-50 word testimonial using the information provided. '
-        f'Incorporate the amount of employees the company has ({
-            amt_employees}). '
-        f'If the previous payroll provider is listed then mention the company '
-        f'({prev_provider}). If the additional feedback ({additional_feedback}) '
-        'is negative please reword to have a positive outlook for future '
-        f'improvements. If the additional feedback ({additional_feedback}) is '
-        'positive please incorporate verbatim the customer\'s wording to retain '
-        'authenticity of the testimony.'
+        'input': f'Review the context: context={summary}. \nGenerate a 30-50 word testimonial using the information provided. Incorporate the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive please incorporate verbatim the customer\'s wording to retain authenticity of the testimony.'
     }
 
     short_testimony = chain3.invoke(input2)
 
     input3 = {
-        'input': f'Review the context: context={summary}. \nGenerate '
-        f'a 100-120 word testimonial using the information provided. '
-        f'Incorporate the amount of employees the company has ({
-            amt_employees}). '
-        f'If the previous payroll provider is listed then mention the company '
-        f'({prev_provider}). If the additional feedback ({additional_feedback}) '
-        'is negative please reword to have a positive outlook for future '
-        f'improvements. If the additional feedback ({additional_feedback}) is '
-        'positive please incorporate verbatim the customer\'s wording to retain '
-        'authenticity of the testimony.'
+        'input': f'Review the context: context={summary}. \nGenerate a 100-120 word testimonial using the information provided. Incorporate the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive please incorporate verbatim the customer\'s wording to retain authenticity of the testimony.'
     }
 
     long_testimony = chain3.invoke(input3)
