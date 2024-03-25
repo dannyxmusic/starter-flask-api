@@ -94,7 +94,7 @@ def process_openai(insert_id):
         sys.exit(1)
 
     key1 = "Please share your experience or any additional feedback you have regarding your experience with Grant Stuart and TPC."
-    key2 = "What field or industry does your company specialize in?"
+    # key2 = "What field or industry does your company specialize in?"
     key3 = "How many employees does your company currently process payroll for?"
     key4 = "Who was your previous Payroll Provider?"
 
@@ -104,6 +104,8 @@ def process_openai(insert_id):
     amt_employees = survey_responses[key3]
     additional_feedback = survey_responses[key1]
     prev_provider = survey_responses[key4]
+
+    logger.info(insert_id)
 
     if not data:
         logger.error(f"Document with _id {insert_id} not found.")
@@ -129,6 +131,8 @@ def process_openai(insert_id):
         content = extract_content(document)
         # Append the content to the list
         contents.append(content)
+
+    logger.info(contents)
 
     # Run OpenAI models
     prompt1 = ChatPromptTemplate.from_messages([
