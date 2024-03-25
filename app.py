@@ -39,7 +39,7 @@ def parse_pretty_data(pretty_data):
         "How would you rate the ease of transitioning and implementation to TPC's services from your previous payroll provider?",
         "How user-friendly do you find iSolved, TPC's HR and payroll software?",
         "Who was your previous Payroll Provider?",
-        "What field or industry does your company specialize in?"
+        "What field or industry does your company specialize in?",
         "How would you rate your satisfaction for TPC over your previous payroll provider?",
         "How would you rate your experience with TPC's customer service in addressing your inquiries and concerns?",
         "How many employees does your company currently process payroll for?",

@@ -102,7 +102,6 @@ def process_openai(insert_id):
     survey_responses = data['survey_responses']
     submission_id = data['submissionID']
     amt_employees = survey_responses[key3]
-    field_of_work = survey_responses[key2]
     additional_feedback = survey_responses[key1]
     prev_provider = survey_responses[key4]
 
