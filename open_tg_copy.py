@@ -3,6 +3,7 @@ from operator import itemgetter
 import random
 import subprocess
 import os
+import sys
 from bson import ObjectId
 from langchain_openai import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
@@ -177,18 +178,9 @@ def generate_testimonials(insert_id):
                         medium=medium_testimony, long=long_testimony, submission_id=submission_id)
 
 
-def parse_arguments():
-    """Parse command-line arguments."""
-    parser = argparse.ArgumentParser(
-        description="Process survey data and generate testimonials")
-    parser.add_argument("insert_id", type=str, help="The ID of the document")
-    return parser.parse_args()
-
-
 def main():
     """Main function."""
-    args = parse_arguments()
-    insert_id = args.insert_id
+    insert_id = sys.argv[1]
     objectId = ObjectId(insert_id)
 
     generate_testimonials(objectId)
