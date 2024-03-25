@@ -186,24 +186,28 @@ def process_openai(insert_id):
         "input": f"Please review the conversation history. conversation_history = {history}"
     }
     summary = chain2.invoke(inputs)
+    logger.info(summary)
 
     input1 = {
         'input': f'Review the context: context={summary}. \nGenerate a 60-80 word testimonial using the information provided. Incorporate the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive please incorporate verbatim the customer\'s wording to retain authenticity of the testimony.'
     }
 
     medium_testimony = chain3.invoke(input1)
+    logger.info(medium_testimony)
 
     input2 = {
         'input': f'Review the context: context={summary}. \nGenerate a 30-50 word testimonial using the information provided. Incorporate the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive please incorporate verbatim the customer\'s wording to retain authenticity of the testimony.'
     }
 
     short_testimony = chain3.invoke(input2)
+    logger.info(short_testimony)
 
     input3 = {
         'input': f'Review the context: context={summary}. \nGenerate a 100-120 word testimonial using the information provided. Incorporate the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive please incorporate verbatim the customer\'s wording to retain authenticity of the testimony.'
     }
 
     long_testimony = chain3.invoke(input3)
+    logger.info(long_testimony)
 
     # Update the original document with conversation history
     append_testimonials(context=history, summary=summary, short=short_testimony,
@@ -236,6 +240,9 @@ if __name__ == "__main__":
         logger.error("Usage: python openai_test.py <insert_id> <data>")
         sys.exit(1)
     insert_id = sys.argv[1]
+    # MongoDB Atlas connection URI
+    MONGO_URI = os.environ.get('MONGO_URI')
+    client = MongoClient(MONGO_URI)
     process_openai(insert_id)
     # update_testimonials(insert_id)
     # Call the email.py script
