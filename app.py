@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 import subprocess
@@ -86,6 +87,7 @@ async def process_openai_script(inserted_id):
 
 
 @app.route('/submit-form', methods=['POST'])
+@app.route('/submit-form', methods=['POST'])
 async def submit_form():
     """
     Endpoint to handle form submissions.
@@ -111,7 +113,7 @@ async def submit_form():
         result = collection.insert_one(document)
 
         # Asynchronously process the openai.py script
-        await process_openai_script(result.inserted_id)
+        asyncio.create_task(process_openai_script(result.inserted_id))
 
         return jsonify({
             'message': 'Document inserted successfully',
