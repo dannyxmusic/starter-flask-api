@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 import subprocess
@@ -44,7 +45,7 @@ model2 = ChatOpenAI(model='gpt-3.5-turbo', temperature=0.8,
 output_parser = StrOutputParser()
 
 
-def append_testimonials(context, summary, short, medium, long, submission_id):
+async def append_testimonials(context, summary, short, medium, long, submission_id):
     """
     Update testimonials in MongoDB collection.
 
@@ -72,7 +73,7 @@ def append_testimonials(context, summary, short, medium, long, submission_id):
         logger.info(filtered_response)
 
         # Insert the document into MongoDB collection
-        collection2.insert_one(filtered_response)
+        await collection2.insert_one(filtered_response)
 
         print("Testimonials updated successfully.")
     except Exception as e:
@@ -80,7 +81,7 @@ def append_testimonials(context, summary, short, medium, long, submission_id):
         # Handle the error appropriately (e.g., log the error, return an error message)
 
 
-def process_openai(insert_id):
+async def process_openai(insert_id):
     """
     Process data using OpenAI.
 
@@ -241,12 +242,12 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         logger.error("Usage: python openai_test.py <insert_id> <data>")
         sys.exit(1)
+
     insert_id = sys.argv[1]
     logger.info(f'Insert Id: {insert_id}')
-    # MongoDB Atlas connection URI
-    MONGO_URI = os.environ.get('MONGO_URI')
-    client = MongoClient(MONGO_URI)
-    process_openai(insert_id)
-    # update_testimonials(insert_id)
+
+    # Run process_openai asynchronously
+    asyncio.run(process_openai(insert_id))
+
     # Call the email.py script
     subprocess.run(['python', EMAIL_SCRIPT_PATH, insert_id])
