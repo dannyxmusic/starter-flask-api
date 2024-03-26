@@ -78,9 +78,9 @@ async def process_openai_script(inserted_id):
     """
     try:
         insert_id = str(inserted_id)
-        logger.info(insert_id)
         url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai'
         payload = {'inserted_id': insert_id}
+        logger.info(payload)
         response = requests.post(url, json=payload)
 
         if response.status_code == 200:
