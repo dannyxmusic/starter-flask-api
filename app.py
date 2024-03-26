@@ -77,6 +77,7 @@ async def process_openai_script(inserted_id):
     Asynchronously trigger the process_openai endpoint.
     """
     try:
+        logger.info(inserted_id)
         url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai'
         payload = {'inserted_id': inserted_id}
         response = requests.post(url, json=payload)
