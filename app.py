@@ -2,7 +2,9 @@ import asyncio
 import logging
 import os
 import subprocess
+import requests
 
+from bson import ObjectId
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 
@@ -76,17 +78,21 @@ async def process_openai_script(inserted_id):
     Asynchronously process the openai.py script.
     """
     try:
-        test_process = subprocess.Popen(['python', OPENAI_SCRIPT_PATH, str(inserted_id)],
-                                        stdout=subprocess.PIPE)
-        test_output, _ = test_process.communicate()
-        test_output = test_output.decode('utf-8').strip()
-        # Handle output if needed
+        # Assuming your Flask server is hosted at https://easy-plum-stingray-toga.cyclic.app/
+        url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai'
+        # Assuming you want to pass inserted_id as a payload
+        insert_id = ObjectId(inserted_id)
+        payload = {'_id': insert_id}
+        response = requests.post(url, json=payload)
+
+        if response.status_code == 200:
+            print('Internal HTTP request to process_openai endpoint successful')
+        else:
+            print('Internal HTTP request to process_openai endpoint failed')
     except Exception as e:
-        # Handle exceptions
-        pass
+        print(f'An error occurred: {str(e)}')
 
 
-@app.route('/submit-form', methods=['POST'])
 @app.route('/submit-form', methods=['POST'])
 async def submit_form():
     """
@@ -124,6 +130,30 @@ async def submit_form():
         logger.exception(f'An error occurred: {str(e)}')
         return jsonify({'error': str(e)}), 500
 
+
+@app.route('/process_openai', methods=['POST'])
+async def process_openai():
+    """
+    Endpoint to handle openai testimonial generation.
+    """
+    # Parse the JSON payload from the request
+    data = request.json
+
+    # Retrieve the inserted ID from the payload
+    inserted_id = data.get('_id')  # Change key to match the payload
+
+    if inserted_id is None:
+        return jsonify({'error': 'Inserted ID not found in request payload'}), 400
+
+    try:
+        test_process = subprocess.Popen(['python', OPENAI_SCRIPT_PATH, str(inserted_id)],
+                                        stdout=subprocess.PIPE)
+        test_output, _ = test_process.communicate()
+        test_output = test_output.decode('utf-8').strip()
+        # Handle output if needed
+    except Exception as e:
+        # Handle exceptions
+        pass
 
 if __name__ == '__main__':
     app.run(debug=True)

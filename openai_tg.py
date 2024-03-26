@@ -242,6 +242,7 @@ if __name__ == "__main__":
         logger.error("Usage: python openai_test.py <insert_id> <data>")
         sys.exit(1)
     insert_id = sys.argv[1]
+    logger.info(f'Insert Id: {insert_id}')
     # MongoDB Atlas connection URI
     MONGO_URI = os.environ.get('MONGO_URI')
     client = MongoClient(MONGO_URI)
