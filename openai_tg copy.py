@@ -51,9 +51,6 @@ async def append_testimonials(context, summary, short, medium, long, submission_
         submission_id (str): The submission ID associated with the testimonials.
     """
     try:
-        # serialized_history = [{'type': 'human', 'content': message.content} if isinstance(message, HumanMessage)
-        #                       else {'type': 'ai', 'content': message.content} for message in context['history']]
-
         filtered_response = {
             "submission_id": submission_id,
             "context": context,
@@ -62,16 +59,10 @@ async def append_testimonials(context, summary, short, medium, long, submission_
             "medium_testimonial": medium,
             "long_testimonial": long,
         }
-
-        # logger.info(filtered_response)
-
-        # Insert the document into MongoDB collection
         await collection2.insert_one(filtered_response)
-
         print("Testimonials updated successfully.")
     except Exception as e:
         print(f"Error occurred while updating testimonials: {e}")
-        # Handle the error appropriately (e.g., log the error, return an error message)
 
 
 async def process_openai(summary, history, insert_id):
@@ -124,10 +115,25 @@ async def process_openai(summary, history, insert_id):
     # logger.info(long_testimony)
 
     # Update the original document with conversation history
-    append_testimonials(context=history, summary=summary, short=short_testimony,
-                        medium=medium_testimony, long=long_testimony, submission_id=submission_id)
+    await append_testimonials(
+        context=history, summary=summary, short=short_testimony,
+        medium=medium_testimony, long=long_testimony, submission_id=insert_id
+    )
 
-    return survey_responses, short_testimony, medium_testimony, long_testimony
+    # Call the email.py script
+    subprocess.run(
+        ['python', EMAIL_SCRIPT_PATH, insert_id, short_testimony,
+         medium_testimony, long_testimony, survey_responses]
+    )
+
+
+async def main(summary, history, insert_id):
+    """
+    Main entry point of the script.
+    """
+    # Run process_openai asynchronously
+    await process_openai(summary, history, insert_id)
+    print('Testimonials generated')
 
 
 if __name__ == "__main__":
@@ -139,13 +145,5 @@ if __name__ == "__main__":
     history = sys.argv[2]
     insert_id = sys.argv[3]
 
-    # Run process_openai asynchronously
-    short_testimony, medium_testimony, long_testimony, survey_responses = asyncio.run(
-        process_openai(summary, history, insert_id))
-    print('testimonials generated')
-
-    # Call the email.py script
-    subprocess.run(
-        ['python', EMAIL_SCRIPT_PATH, insert_id, short_testimony,
-         medium_testimony, long_testimony, survey_responses]
-    )
+    # Run the main function asynchronously
+    asyncio.run(main(summary, history, insert_id))
