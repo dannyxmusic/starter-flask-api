@@ -5,7 +5,6 @@ import os
 import sys
 
 from operator import itemgetter
-from bson import ObjectId
 from flask import jsonify
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -13,24 +12,11 @@ from langchain_core.runnables import RunnableLambda, RunnablePassthrough
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.output_parsers import StrOutputParser
-from pymongo import MongoClient
 import requests
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# MongoDB Atlas connection URI
-MONGO_URI = os.environ.get('MONGO_URI')
-client = MongoClient(MONGO_URI)
-
-# Access the database and collection
-db = client['tpc_survey_f1']
-collection = db['cyclic_server']
-collection2 = db['survey1_testimonials']
-
-# Path to the email.py script
-EMAIL_SCRIPT_PATH = 'email_tg.py'
 
 # Path to the OpenAI API key
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
@@ -156,8 +142,6 @@ if __name__ == "__main__":
         # Run process_openai asynchronously
         asyncio.run(process_openai(
             insert_id=insert_id, survey_data=survey_data))
-        # Close MongoDB connection
-        client.close()
 
         # Return a success message
         print(
