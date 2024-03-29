@@ -87,28 +87,28 @@ async def process_openai(summary, history, insert_id):
     prev_provider = survey_responses[key4]
 
     prompt3 = ChatPromptTemplate.from_messages([
-        ("system", "You are an AI tool designed generate a testimonial based on survey results. You do 3 things. Write in first person from the perspective of the customer. 2. Avoid using the provided recurring words and phrases and find alternatives. 3. Generate a unique testimonials"),
+        ("system", "You are an AI tool designed generate a testimonial based on survey results. You do 3 things. Write in first person from the perspective of the customer. 2. Recieve a summary of the context. In the summary are the survey results and words or phrasing that should be avoided 3. Generate a unique testimonials. \n Do not start testimonials with 'Transitioning to TPC', 'I recently transitioned' or 'The transition'"),
         ("human", "{input}"),
     ])
 
     chain3 = (prompt3 | model2 | output_parser)
 
     input1 = {
-        'input': f'Review the context: context={summary} and refrain from using recurring words or phrases listed in the context. \nGenerate a 60-80 word testimonial using the information provided. Incorporate the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive please incorporate verbatim the customer\'s wording to retain authenticity of the testimony.'
+        'input': f'Review the context: context={summary}. Do not use words or phrases listed in section 2 of the context. \nGenerate a 60-80 word testimonial using the information provided. Include the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive include the customer\'s response to retain authenticity of the testimony.'
     }
 
     medium_testimony = chain3.invoke(input1)
     # logger.info(medium_testimony)
 
     input2 = {
-        'input': f'Review the context: context={summary}. Refrain from using recurring words or phrases listed in the context. \nGenerate a 30-50 word testimonial using the information provided. Incorporate the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive please incorporate verbatim the customer\'s wording to retain authenticity of the testimony.'
+        'input': f'Review the context: context={summary}. Do not use words or phrases listed in section 2 of the context. \nGenerate a 30-50 word testimonial using the information provided. Include the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive include the customer\'s response to retain authenticity of the testimony.'
     }
 
     short_testimony = chain3.invoke(input2)
     # logger.info(short_testimony)
 
     input3 = {
-        'input': f'Review the context: context={summary}. Refrain from using recurring words or phrases listed in the context. \nGenerate a 100-120 word testimonial using the information provided. Incorporate the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive please incorporate verbatim the customer\'s wording to retain authenticity of the testimony.'
+        'input': f'Review the context: context={summary}. Do not use words or phrases listed in section 2 of the context. \nGenerate a 100-120 word testimonial using the information provided. Include the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive include the customer\'s response to retain authenticity of the testimony.'
     }
 
     long_testimony = chain3.invoke(input3)

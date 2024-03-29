@@ -134,7 +134,7 @@ async def process_openai(insert_id, survey_data):
     history = memory.load_memory_variables({})
 
     inputs = {
-        "input": f"Please review the conversation history. conversation_history = {history}, 1. Give me a summary of the original survey questions and responses. 2. Notate repeating words or phrases from the Historical Documents. 3. Summarize the human to ai conversation."
+        "input": f"Please review the conversation history. conversation_history = {history}, 1. Give me a summary of the original survey questions and responses. 2. List repeating words or phrases from the Historical Documents. 3. Summarize the human to ai conversation."
     }
     summary = chain2.invoke(inputs)
 
