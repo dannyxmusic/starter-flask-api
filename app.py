@@ -144,7 +144,6 @@ async def process_openai():
         inserted_id = data.get('inserted_id')
         survey_responses = data.get('survey_responses')
         survey_responses_str = json.dumps(survey_responses)
-        logger.info(survey_responses_str)
 
         if inserted_id is None:
             return jsonify({'error': 'Inserted ID not found in request payload'}), 400
@@ -170,6 +169,9 @@ async def process_openai2():
         summary = data.get('summary')
         history = data.get('history')
         insert_id = data.get('insert_id')
+
+        logger.info(summary)
+        logger.info(history)
 
         if summary is None or history is None:
             return jsonify({'error': 'Summary or history not found in request payload'}), 400
