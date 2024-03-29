@@ -130,11 +130,13 @@ async def process_openai(insert_id, survey_data):
     memory.save_context(inputs, {"output": response})
 
     history = memory.load_memory_variables({})
+    logger.info(history)
 
     inputs = {
         "input": f"Please review the conversation history. conversation_history = {history}"
     }
     summary = chain2.invoke(inputs)
+    logger.info(summary)
 
     # Asynchronously process the openai.py script
     asyncio.create_task(send_post_request(summary, history, insert_id))
@@ -148,7 +150,6 @@ if __name__ == "__main__":
 
     insert_id = sys.argv[1]
     survey_data = sys.argv[2]
-    logger.info(f'Insert Id: {insert_id}')
 
     # Run process_openai asynchronously
     asyncio.run(process_openai(insert_id=insert_id, survey_data=survey_data))
