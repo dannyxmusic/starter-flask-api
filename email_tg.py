@@ -48,7 +48,7 @@ def extract_content(doc):
     Returns:
         tuple: Email address and testimonial content.
     """
-    conversation_history = doc.get('conversationHistory', {})
+    conversation_history = doc.get('survey_responses', {})
     email_address = doc.get('email', '')
     content_keys = ["content8", "content10", "content12"]
     content_values = [conversation_history.get(
@@ -59,26 +59,31 @@ def extract_content(doc):
 # Find document with the provided object ID
 object_id = sys.argv[1]
 object_id = ObjectId(object_id)
+survey_responses = sys.argv[5]
+short_testimonial = sys.argv[2]
+medium_testimonial = sys.argv[3]
+long_testimonial = sys.argv[4]
 document = collection.find_one({"_id": object_id})
 
 # Extract content from the document
 email_address, content = extract_content(document)
 
 # Construct the email message
-first_item = content[0]
-second_item = content[1]
-third_item = content[2]
+first_item = short_testimonial
+second_item = medium_testimonial
+third_item = long_testimonial
 
 message_body = (
     f"Email: {email_address}\n \n"
     f"Short Testimonial: {first_item}\n \n"
     f"Medium Testimonial: {second_item}\n \n"
-    f"Long Testimonial: {third_item}"
+    f"Long Testimonial: {third_item}\n \n"
+    f"Survey Responses: {survey_responses}"
 )
 
 message = EmailMessage()
 message.set_content(message_body)
-message["To"] = "sandagedaniel@gmail.com, "#grant@thepayrollco.com"
+message["To"] = "sandagedaniel@gmail.com, "  # grant@thepayrollco.com"
 message["From"] = "therealdannyx@gmail.com"
 message["Subject"] = "Testimonial"
 

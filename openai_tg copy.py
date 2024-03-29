@@ -127,6 +127,8 @@ async def process_openai(summary, history, insert_id):
     append_testimonials(context=history, summary=summary, short=short_testimony,
                         medium=medium_testimony, long=long_testimony, submission_id=submission_id)
 
+    return survey_responses, short_testimony, medium_testimony, long_testimony
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 4:
@@ -138,8 +140,10 @@ if __name__ == "__main__":
     insert_id = sys.argv[3]
 
     # Run process_openai asynchronously
-    asyncio.run(process_openai(summary, history, insert_id))
+    short_testimony, medium_testimony, long_testimony, survey_responses = asyncio.run(
+        process_openai(summary, history, insert_id))
     print('testimonials generated')
 
     # Call the email.py script
-    subprocess.run(['python', EMAIL_SCRIPT_PATH, insert_id])
+    subprocess.run(['python', EMAIL_SCRIPT_PATH, insert_id, short_testimony,
+                   medium_testimony, long_testimony, survey_responses])
