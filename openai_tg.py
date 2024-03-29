@@ -151,7 +151,7 @@ async def process_openai(insert_id, survey_data):
     memory.save_context(inputs, {"output": response})
 
     inputs = {
-        "input": f"Before I ask you to generate a testimonial I'd like you to review these historical testimonial responses for recurring language. Document them and we will avoid using repeat language in our future testimonial generations. Historical Documents = {contents}"
+        "input": f"Review these historical testimonial responses for recurring language and phrasing. Document them and we will avoid using repeat language in our future testimonial generations. Historical Documents = {contents}"
     }
     response = chain.invoke(inputs)
     memory.save_context(inputs, {"output": response})
@@ -159,7 +159,7 @@ async def process_openai(insert_id, survey_data):
     history = memory.load_memory_variables({})
 
     inputs = {
-        "input": f"Please review the conversation history. conversation_history = {history}, 1. Give me a summary of the original survey questions and responses. 2. Notate repeating words or phrases. 3. Summarize the human to ai conversation."
+        "input": f"Please review the conversation history. conversation_history = {history}, 1. Give me a summary of the original survey questions and responses. 2. Notate repeating words or phrases from the Historical Documents. 3. Summarize the human to ai conversation."
     }
     summary = chain2.invoke(inputs)
 
