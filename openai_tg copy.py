@@ -124,8 +124,8 @@ async def process_openai(summary, history, insert_id):
     # logger.info(long_testimony)
 
     # Update the original document with conversation history
-    await append_testimonials(context=history, summary=summary, short=short_testimony,
-                              medium=medium_testimony, long=long_testimony, submission_id=submission_id)
+    append_testimonials(context=history, summary=summary, short=short_testimony,
+                        medium=medium_testimony, long=long_testimony, submission_id=submission_id)
 
 
 if __name__ == "__main__":
@@ -139,6 +139,7 @@ if __name__ == "__main__":
 
     # Run process_openai asynchronously
     asyncio.run(process_openai(summary, history, insert_id))
+    print('testimonials generated')
 
     # Call the email.py script
     subprocess.run(['python', EMAIL_SCRIPT_PATH, insert_id])
