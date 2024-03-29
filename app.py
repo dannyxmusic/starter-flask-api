@@ -83,7 +83,6 @@ async def process_openai_script(inserted_id, parsed_data):
         url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai'
         payload = {'inserted_id': insert_id,
                    'survey_responses': parsed_data}
-        logger.info(payload)
         response = requests.post(url, json=payload)
 
         if response.status_code == 200:
@@ -145,6 +144,7 @@ async def process_openai():
         inserted_id = data.get('inserted_id')
         survey_responses = data.get('survey_responses')
         survey_responses_str = json.dumps(survey_responses)
+        logger.info(survey_responses_str)
 
         if inserted_id is None:
             return jsonify({'error': 'Inserted ID not found in request payload'}), 400
