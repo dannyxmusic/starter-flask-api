@@ -77,7 +77,7 @@ async def send_post_request(summary, history, insert_id):
         # Convert the payload to JSON format
         payload_json = json.dumps(payload)
 
-        url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai'
+        url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai2'
         payload = {
             'summary': summary,
             'history': payload_json,
