@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 import os
 import subprocess
@@ -143,13 +144,14 @@ async def process_openai():
         data = request.json
         inserted_id = data.get('inserted_id')
         survey_responses = data.get('survey_responses')
+        survey_responses_str = json.dumps(survey_responses)
 
         if inserted_id is None:
             return jsonify({'error': 'Inserted ID not found in request payload'}), 400
 
         # Execute subprocess with inserted_id as command-line argument
         subprocess.run(['python', OPENAI_SCRIPT_PATH1,
-                       str(inserted_id), survey_responses], check=True)
+                       str(inserted_id), survey_responses_str], check=True)
 
         return jsonify({'message': 'OpenAI subprocess completed successfully'}), 200
 
