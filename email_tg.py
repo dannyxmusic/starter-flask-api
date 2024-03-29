@@ -97,7 +97,7 @@ message = EmailMessage()
 message.set_content(message_body)
 message["To"] = "sandagedaniel@gmail.com, "  # grant@thepayrollco.com"
 message["From"] = "therealdannyx@gmail.com"
-message["Subject"] = "Testimonial"
+message["Subject"] = "New Ai Testimonial"
 
 # Encode the message
 encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()

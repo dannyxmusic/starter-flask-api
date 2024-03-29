@@ -81,7 +81,7 @@ async def process_openai(summary, history, insert_id):
     key4 = "Who was your previous Payroll Provider?"
 
     data = collection.find_one({"_id": insert_id})
-    submission_id = data['submission_id']
+    submission_id = data['submissionID']
     survey_responses = data['survey_responses']
     amt_employees = survey_responses[key3]
     additional_feedback = survey_responses[key1]
