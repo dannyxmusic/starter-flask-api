@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 import os
 import subprocess
@@ -51,24 +52,39 @@ async def send_post_request(summary, history, insert_id):
     Send HTTP POST request with summary and history data.
     """
     try:
-        history_list = history.get('history', [])
+        history = history
 
-        # Serializing the list of messages
+        # Assuming 'history' is a dictionary containing a 'history' key with a list of messages
         history_serializable = []
-        for message in history_list:
-            if isinstance(message, (HumanMessage, AIMessage)):
-                message_dict = {'content': message.content}
+
+        # Iterate over each message in the history
+        for message in history['history']:
+            # Convert HumanMessage objects to dictionaries
+            if isinstance(message, HumanMessage):
+                message_dict = {'Human': message.content}
                 history_serializable.append(message_dict)
+            # Convert AIMessage objects to dictionaries
+            elif isinstance(message, AIMessage):
+                message_dict = {'Ai': message.content}
+                history_serializable.append(message_dict)
+            # Handle unrecognized message types
             else:
                 logger.warning(f"Unrecognized message type: {type(message)}")
+
+        # Create the payload dictionary
+        payload = {'history': history_serializable}
+
+        # Convert the payload to JSON format
+        payload_json = json.dumps(payload)
 
         url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai'
         payload = {
             'summary': summary,
-            'history': history['history'],
+            'history': payload_json,
             'insert_id': insert_id
         }
-        # logger.info(payload)
+
+        logger.info(payload)
 
         response = requests.post(url, json=payload)
         if response.status == 200:
