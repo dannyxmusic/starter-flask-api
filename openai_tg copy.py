@@ -88,28 +88,28 @@ async def process_openai(summary, history, insert_id):
     prev_provider = survey_responses[key4]
 
     prompt3 = ChatPromptTemplate.from_messages([
-        ("system", "You are an AI tool designed generate a testimonial based on survey results. You do 3 things. 1. Recieve a summary which includes the survey responses, words/phrases to omit, and context. 2. Write in first person from the client who completed the survey. 3. Generate a uniquely worded testimonials.'"),
+        ("system", "You are an AI tool designed generate a testimonial based on survey results. You do 3 things. 1. Recieve a summary which includes the survey responses, words/phrases to exlude, and context. 2. Write in first person from the client who completed the survey. 3. Generate a uniquely worded testimonials.'"),
         ("human", "{input}"),
     ])
 
     chain3 = (prompt3 | model2 | output_parser)
 
     input1 = {
-        'input': f'Review the data: summary={summary}.\nGenerate a 60-80 word testimonial using the information provided. Rules you must follow:\n3. Include the amount of employees the company has ({amt_employees}).\n2. Mention the company ({prev_provider}). Include some of this ({additional_feedback}) if it has a positive sentiment.\n1. Do not start the testimonial with "Transitioning to TPC", "transitioning", "The transition", or "I recently transitioned".\n 4. Do not use words or phrases listed in section 2 of the summary.'
+        'input': f'Review the data: summary={summary}.\nGenerate a 60-80 word testimonial using the information provided. Rules you must follow:\n3. Include the amount of employees the company has ({amt_employees}).\n2. Mention the company ({prev_provider}). Include some of this ({additional_feedback}) if it has a positive sentiment.\n1. Do not start the testimonial with "Transitioning to TPC", "transitioning", "The transition", or "I recently transitioned".\n 4. Do not use repeating/recurring words or phrases identified in section 2 of the summary.'
     }
 
     medium_testimony = chain3.invoke(input1)
     # logger.info(medium_testimony)
 
     input2 = {
-        'input': f'Review the data: summary={summary}.\nGenerate a 30-50 word testimonial using the information provided. Rules you must follow:\n3. Include the amount of employees the company has ({amt_employees}).\n2. Mention the company ({prev_provider}). Include some of this ({additional_feedback}) if it has a positive sentiment.\n1. Do not start the testimonial with "Transitioning to TPC", "transitioning", "The transition", or "I recently transitioned".\n 4. Do not use words or phrases listed in section 2 of the summary.'
+        'input': f'Review the data: summary={summary}.\nGenerate a 30-50 word testimonial using the information provided. Rules you must follow:\n3. Include the amount of employees the company has ({amt_employees}).\n2. Mention the company ({prev_provider}). Include some of this ({additional_feedback}) if it has a positive sentiment.\n1. Do not start the testimonial with "Transitioning to TPC", "transitioning", "The transition", or "I recently transitioned".\n 4. Do not use repeating/recurring words or phrases identified in section 2 of the summary.'
     }
 
     short_testimony = chain3.invoke(input2)
     # logger.info(short_testimony)
 
     input3 = {
-        'input': f'Review the context: context={summary}.\nGenerate a 100-120 word testimonial using the information provided. Rules you must follow:\n3. Include the amount of employees the company has ({amt_employees}).\n2. Mention the previous payroll company ({prev_provider}). Include some of this ({additional_feedback}) if it has a positive sentiment.\n1. Do not start the testimonial with "Transitioning to TPC", "transitioning", "The transition", or "I recently transitioned".\n 4. Do not use words or phrases listed in section 2 of the summary.'
+        'input': f'Review the context: context={summary}.\nGenerate a 100-120 word testimonial using the information provided. Rules you must follow:\n3. Include the amount of employees the company has ({amt_employees}).\n2. Mention the previous payroll company ({prev_provider}). Include some of this ({additional_feedback}) if it has a positive sentiment.\n1. Do not start the testimonial with "Transitioning to TPC", "transitioning", "The transition", or "I recently transitioned".\n 4. Do not use repeating/recurring words or phrases identified in section 2 of the summary.'
     }
 
     long_testimony = chain3.invoke(input3)
