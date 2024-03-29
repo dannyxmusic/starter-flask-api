@@ -50,22 +50,21 @@ async def send_post_request(summary, history, insert_id):
     """
     Send HTTP POST request with summary and history data.
     """
-    logger = logging.getLogger(__name__)
     try:
-        url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai2'
-        async with aiohttp.ClientSession() as session:
-            payload = {
-                'summary': summary,
-                'history': history,
-                'insert_id': insert_id
-            }
-            async with session.post(url, json=payload) as response:
-                if response.status == 200:
-                    logger.info(
-                        'Internal HTTP request to process_openai endpoint successful')
-                else:
-                    logger.error(
-                        'Internal HTTP request to process_openai endpoint failed')
+        url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai'
+        payload = {
+            'summary': summary,
+            'history': history,
+            'insert_id': insert_id
+        }
+        response = requests.post(url, json=payload)
+
+        if response.status == 200:
+            logger.info(
+                'Internal HTTP request to process_openai endpoint successful')
+        else:
+            logger.error(
+                'Internal HTTP request to process_openai endpoint failed')
     except Exception as e:
         logger.error(f'An error occurred: {str(e)}')
 
