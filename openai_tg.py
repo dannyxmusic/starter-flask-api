@@ -45,7 +45,7 @@ model2 = ChatOpenAI(model='gpt-3.5-turbo', temperature=0.8,
 output_parser = StrOutputParser()
 
 
-async def send_post_request(summary, history):
+async def send_post_request(summary, history, insert_id):
     """
     Send HTTP POST request with summary and history data.
     """
@@ -53,7 +53,8 @@ async def send_post_request(summary, history):
     async with aiohttp.ClientSession() as session:
         payload = {
             'summary': summary,
-            'history': history
+            'history': history,
+            'insert_id': insert_id
         }
         async with session.post(url, json=payload) as response:
             if response.status != 200:
