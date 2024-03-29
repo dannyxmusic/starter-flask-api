@@ -124,7 +124,7 @@ async def submit_form():
 
         result = collection.insert_one(document)
 
-        all_ids = [doc["_id"] for doc in collection2.find({}, {"_id": 1})]
+        all_ids = [doc["_id"] for doc in collection2.find({}, {"_id": 2})]
         random_ids = random.sample(all_ids, 2)
 
         def extract_content(doc):
