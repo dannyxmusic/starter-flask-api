@@ -22,7 +22,7 @@ client = MongoClient(MONGO_URI)
 # Access the database and collection
 db = client['tpc_survey_f1']
 collection = db['cyclic_server']
-collection2 = db['survey_testimonials']
+collection2 = db['survey1_testimonials']
 
 # Path to the openai.py script
 OPENAI_SCRIPT_PATH1 = 'openai_tg.py'
@@ -124,7 +124,7 @@ async def submit_form():
 
         result = collection.insert_one(document)
 
-        all_ids = [doc["_id"] for doc in collection2.find({}, {"_id": 2})]
+        all_ids = [doc["_id"] for doc in collection2.find({}, {"_id": 1})]
         random_ids = random.sample(all_ids, 2)
 
         def extract_content(doc):
