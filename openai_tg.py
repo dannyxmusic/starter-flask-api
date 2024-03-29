@@ -117,13 +117,6 @@ async def process_openai(insert_id, survey_data):
 
     chain2 = prompt2 | model | output_parser
 
-    inputs = {"input": "What is your purpose?"}
-    response = chain.invoke(inputs)
-
-    memory.save_context(inputs, {"output": response})
-
-    memory.load_memory_variables({})
-
     inputs = {
         "input": f"Here is a survey with the '_id': {insert_id}. Please review the survey and confirm that you processed the data: Survey response = {survey_responses}"
     }

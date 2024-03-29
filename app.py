@@ -137,7 +137,7 @@ async def submit_form():
             content = extract_content(document)  # Await here
             contents.append(content)
 
-        # Asynchronously process the openai.py script
+        # Asynchronously process the openai.py script without awaiting the task
         asyncio.create_task(process_openai_script(
             result.inserted_id, parsed_data, contents))
 

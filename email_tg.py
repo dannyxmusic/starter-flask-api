@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import base64
@@ -59,10 +60,21 @@ def extract_content(doc):
 # Find document with the provided object ID
 object_id = sys.argv[1]
 object_id = ObjectId(object_id)
-survey_responses = sys.argv[5]
+
+# Convert survey_responses string to a dictionary
+survey_responses_str = sys.argv[5]
+survey_responses = json.loads(survey_responses_str)
+
+# Format survey_responses for readability in email
+formatted_survey_responses = ""
+for question, answer in survey_responses.items():
+    formatted_survey_responses += f"{question}: {answer}\n\n"
+
 short_testimonial = sys.argv[2]
 medium_testimonial = sys.argv[3]
 long_testimonial = sys.argv[4]
+
+# Assuming collection is defined elsewhere in your code
 document = collection.find_one({"_id": object_id})
 
 # Extract content from the document
