@@ -35,9 +35,6 @@ EMAIL_SCRIPT_PATH = 'email_tg.py'
 # Path to the OpenAI API key
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 
-# Initialize OpenAI instance
-model = ChatOpenAI(model='gpt-3.5-turbo', temperature=0.2,
-                   api_key=OPENAI_API_KEY)
 model2 = ChatOpenAI(model='gpt-3.5-turbo', temperature=0.8,
                     api_key=OPENAI_API_KEY)
 
@@ -89,13 +86,7 @@ async def process_openai(summary, history, insert_id):
         insert_id (str): The ID of the document.
         data (dict): The data to process.
     """
-    try:
-        # Convert insert_id to ObjectId
-        insert_id = ObjectId(insert_id)
-    except Exception as e:
-        logger.error(f"Error converting insert_id to ObjectId: {e}")
-        sys.exit(1)
-
+    insert_id = ObjectId(insert_id)
     key1 = "Please share your experience or any additional feedback you have regarding your experience with Grant Stuart and TPC."
     key3 = "How many employees does your company currently process payroll for?"
     key4 = "Who was your previous Payroll Provider?"
