@@ -106,14 +106,14 @@ async def process_openai(insert_id, survey_data):
     random_ids = random.sample(all_ids, 2)
     logger.info(f"Randomly selected IDs: {random_ids}")
 
-    def extract_content(doc):
+    async def extract_content(doc):
         return ' '.join([doc[key] for key in ["short_testimonial", "medium_testimonial", "long_testimonial"]])
 
     contents = []
 
     for random_id in random_ids:
-        document = collection2.find_one({"_id": random_id})
-        content = extract_content(document)
+        document = await collection2.find_one({"_id": random_id})  # Await here
+        content = await extract_content(document)  # Await here
         contents.append(content)
 
     prompt1 = ChatPromptTemplate.from_messages([
