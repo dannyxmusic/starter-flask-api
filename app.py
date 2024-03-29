@@ -22,7 +22,8 @@ db = client['tpc_survey_f1']
 collection = db['cyclic_server']
 
 # Path to the openai.py script
-OPENAI_SCRIPT_PATH = 'openai_tg.py'
+OPENAI_SCRIPT_PATH1 = 'openai_tg.py'
+OPENAI_SCRIPT_PATH2 = 'openai_tg_copy'
 
 
 def parse_pretty_data(pretty_data):
@@ -144,8 +145,33 @@ async def process_openai():
             return jsonify({'error': 'Inserted ID not found in request payload'}), 400
 
         # Execute subprocess with inserted_id as command-line argument
-        subprocess.run(['python', OPENAI_SCRIPT_PATH,
+        subprocess.run(['python', OPENAI_SCRIPT_PATH1,
                        str(inserted_id)], check=True)
+
+        return jsonify({'message': 'OpenAI subprocess completed successfully'}), 200
+
+    except Exception as e:
+        logger.exception(f'An error occurred: {str(e)}')
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/process_openai2', methods=['POST'])
+async def process_openai2():
+    """
+    Endpoint to handle openai testimonial generation.
+    """
+    try:
+        data = request.json
+        summary = data.get('summary')
+        history = data.get('history')
+        insert_id = data.get('insert_id')
+
+        if summary is None or history is None:
+            return jsonify({'error': 'Summary or history not found in request payload'}), 400
+
+        # Execute subprocess with summary and history as command-line arguments
+        subprocess.run(['python', OPENAI_SCRIPT_PATH2,
+                       str(summary), str(history), str(insert_id)], check=True)
 
         return jsonify({'message': 'OpenAI subprocess completed successfully'}), 200
 
