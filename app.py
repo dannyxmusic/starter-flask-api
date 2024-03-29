@@ -24,7 +24,7 @@ collection = db['cyclic_server']
 
 # Path to the openai.py script
 OPENAI_SCRIPT_PATH1 = 'openai_tg.py'
-OPENAI_SCRIPT_PATH2 = 'openai_tg_copy.py'
+OPENAI_SCRIPT_PATH2 = 'openai_tg copy.py'
 
 
 def parse_pretty_data(pretty_data):
