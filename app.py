@@ -142,13 +142,14 @@ async def process_openai():
     try:
         data = request.json
         inserted_id = data.get('inserted_id')
+        survey_responses = data.get('survey_responses')
 
         if inserted_id is None:
             return jsonify({'error': 'Inserted ID not found in request payload'}), 400
 
         # Execute subprocess with inserted_id as command-line argument
         subprocess.run(['python', OPENAI_SCRIPT_PATH1,
-                       str(inserted_id)], check=True)
+                       str(inserted_id), survey_responses], check=True)
 
         return jsonify({'message': 'OpenAI subprocess completed successfully'}), 200
 
