@@ -157,3 +157,5 @@ if __name__ == "__main__":
 
     insert_id = sys.argv[1]
     logger.info(f'Insert Id: {insert_id}')
+    # Run process_openai asynchronously
+    asyncio.run(process_openai(insert_id=insert_id))
