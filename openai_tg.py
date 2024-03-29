@@ -67,14 +67,13 @@ async def send_post_request(summary, history, insert_id):
         }
         logger.info(payload)
 
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, json=payload) as response:
-                if response.status == 200:
-                    logger.info(
-                        'Internal HTTP request to process_openai endpoint successful')
-                else:
-                    logger.error(
-                        'Internal HTTP request to process_openai endpoint failed')
+        response = requests.post(url, json=payload)
+        if response.status == 200:
+            logger.info(
+                'Internal HTTP request to process_openai endpoint successful')
+        else:
+            logger.error(
+                'Internal HTTP request to process_openai endpoint failed')
 
     except Exception as e:
         logger.error(f'An error occurred: {str(e)}')
