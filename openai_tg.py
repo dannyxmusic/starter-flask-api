@@ -57,8 +57,9 @@ async def send_post_request(summary, history):
         }
         async with session.post(url, json=payload) as response:
             if response.status != 200:
-                logger.error(f'Failed to send HTTP POST request: {
-                             response.status}')
+                logger.error(
+                    f'Failed to send HTTP POST request: {response.status}'
+                )
             else:
                 logger.info("HTTP POST request sent successfully.")
 
