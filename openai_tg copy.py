@@ -63,7 +63,7 @@ async def append_testimonials(context, summary, short, medium, long, submission_
             "long_testimonial": long,
         }
 
-        logger.info(filtered_response)
+        # logger.info(filtered_response)
 
         # Insert the document into MongoDB collection
         await collection2.insert_one(filtered_response)
@@ -145,5 +145,7 @@ if __name__ == "__main__":
     print('testimonials generated')
 
     # Call the email.py script
-    subprocess.run(['python', EMAIL_SCRIPT_PATH, insert_id, short_testimony,
-                   medium_testimony, long_testimony, survey_responses])
+    subprocess.run(
+        ['python', EMAIL_SCRIPT_PATH, insert_id, short_testimony,
+         medium_testimony, long_testimony, survey_responses]
+    )
