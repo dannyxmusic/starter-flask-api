@@ -37,8 +37,6 @@ OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 # Initialize OpenAI instance
 model = ChatOpenAI(model='gpt-3.5-turbo', temperature=0,
                    api_key=OPENAI_API_KEY)
-model2 = ChatOpenAI(model='gpt-3.5-turbo', temperature=0.8,
-                    api_key=OPENAI_API_KEY)
 
 # Initialize output parser
 output_parser = StrOutputParser()
