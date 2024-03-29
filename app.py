@@ -170,9 +170,9 @@ async def process_openai2():
         history = data.get('history')
         insert_id = data.get('insert_id')
 
-        logger.info('summary:', summary)
-        logger.info('insert_id:', insert_id)
-        logger.info('history:', history)
+        logger.info('summary: %s', summary)
+        logger.info('insert_id: %s', insert_id)
+        logger.info('history: %s', history)
 
         if summary is None or history or insert_id is None:
             return jsonify({'error': 'Summary or history not found in request payload'}), 400
