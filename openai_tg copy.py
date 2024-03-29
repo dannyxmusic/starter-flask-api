@@ -115,14 +115,14 @@ async def process_openai(summary, history, insert_id):
     # logger.info(long_testimony)
 
     # Update the original document with conversation history
-    await append_testimonials(
+    append_testimonials(
         context=history, summary=summary, short=short_testimony,
         medium=medium_testimony, long=long_testimony, submission_id=insert_id
     )
 
     # Call the email.py script
     subprocess.run(
-        ['python', EMAIL_SCRIPT_PATH, insert_id, short_testimony,
+        ['python', EMAIL_SCRIPT_PATH, str(insert_id), short_testimony,
          medium_testimony, long_testimony, survey_responses]
     )
 
