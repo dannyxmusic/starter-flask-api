@@ -73,14 +73,15 @@ def parse_pretty_data(pretty_data):
     return extracted_data
 
 
-async def process_openai_script(inserted_id):
+async def process_openai_script(inserted_id, parsed_data):
     """
     Asynchronously trigger the process_openai endpoint.
     """
     try:
         insert_id = str(inserted_id)
         url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai'
-        payload = {'inserted_id': insert_id}
+        payload = {'inserted_id': insert_id,
+                   'survey_responses': parsed_data}
         logger.info(payload)
         response = requests.post(url, json=payload)
 
@@ -120,7 +121,8 @@ async def submit_form():
         result = collection.insert_one(document)
 
         # Asynchronously process the openai.py script
-        asyncio.create_task(process_openai_script(result.inserted_id))
+        asyncio.create_task(process_openai_script(
+            result.inserted_id, parsed_data))
 
         return jsonify({
             'message': 'Document inserted successfully',

@@ -65,25 +65,11 @@ async def send_post_request(summary, history, insert_id):
                 logger.info("HTTP POST request sent successfully.")
 
 
-async def process_openai(insert_id):
+async def process_openai(insert_id, survey_data):
     """
     Process data using OpenAI.
     """
-    try:
-        # Convert insert_id to ObjectId
-        insert_id = ObjectId(insert_id)
-    except Exception as e:
-        logger.error(f"Error converting insert_id to ObjectId: {e}")
-        sys.exit(1)
-
-    data = collection.find_one({"_id": insert_id})
-    survey_responses = data['survey_responses']
-
-    logger.info(insert_id)
-
-    if not data:
-        logger.error(f"Document with _id {insert_id} not found.")
-        sys.exit(1)
+    survey_responses = survey_data
 
     all_ids = [doc["_id"] for doc in collection2.find({}, {"_id": 1})]
     random_ids = random.sample(all_ids, 2)
@@ -152,15 +138,16 @@ async def process_openai(insert_id):
     logger.info('Task Created')
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 3:
         logger.error("Usage: python openai_test.py <insert_id> <data>")
         sys.exit(1)
 
     insert_id = sys.argv[1]
+    survey_data = sys.argv[2]
     logger.info(f'Insert Id: {insert_id}')
 
     # Run process_openai asynchronously
-    asyncio.run(process_openai(insert_id=insert_id))
+    asyncio.run(process_openai(insert_id=insert_id, survey_data=survey_data))
 
     # Close MongoDB connection
     client.close()
