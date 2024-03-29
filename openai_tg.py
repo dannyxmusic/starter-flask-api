@@ -108,11 +108,6 @@ async def process_openai(insert_id):
         ("human", "{input}"),
     ])
 
-    prompt3 = ChatPromptTemplate.from_messages([
-        ("system", "You are an AI tool designed generate a testimonial based on survey results. You do 3 things. Write in first person from the perspective of the customer. 2. Avoid using the provided recurring words and phrases and find alternatives. 3. Generate a unique testimonials"),
-        ("human", "{input}"),
-    ])
-
     memory = ConversationBufferMemory(return_messages=True)
     memory.load_memory_variables({})
 
