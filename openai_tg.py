@@ -102,19 +102,24 @@ async def process_openai(insert_id, survey_data):
     """
     survey_responses = survey_data
 
+    # Retrieve all document IDs from collection2
     all_ids = [doc["_id"] for doc in collection2.find({}, {"_id": 1})]
-    random_ids = random.sample(all_ids, 2)
-    logger.info(f"Randomly selected IDs: {random_ids}")
 
+    # Select random document IDs
+    random_ids = random.sample(all_ids, 2)
+
+    # Function to extract content asynchronously
     async def extract_content(doc):
         return ' '.join([doc[key] for key in ["short_testimonial", "medium_testimonial", "long_testimonial"]])
 
-    contents = []
+    async def process_document(random_id):
+        document = await collection2.find_one({"_id": random_id}, {"short_testimonial": 1, "medium_testimonial": 1, "long_testimonial": 1})
+        content = await extract_content(document)
+        return content
 
-    for random_id in random_ids:
-        document = await collection2.find_one({"_id": random_id})  # Await here
-        content = await extract_content(document)  # Await here
-        contents.append(content)
+    # Asynchronously process documents in parallel
+    tasks = [process_document(random_id) for random_id in random_ids]
+    contents = await asyncio.gather(*tasks)
 
     prompt1 = ChatPromptTemplate.from_messages([
         ("system", "You are an AI designed to assist in testimonial generation. I provide you survey results and you do 2 things; 1. analyze sentiment. 2. Detect recurring wordage or phrasing from previous testimonials."),
