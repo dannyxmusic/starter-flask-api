@@ -24,7 +24,7 @@ collection = db['cyclic_server']
 
 # Path to the openai.py script
 OPENAI_SCRIPT_PATH1 = 'openai_tg.py'
-OPENAI_SCRIPT_PATH2 = 'openai_tg_copy'
+OPENAI_SCRIPT_PATH2 = 'openai_tg_copy.py'
 
 
 def parse_pretty_data(pretty_data):
@@ -169,10 +169,6 @@ async def process_openai2():
         summary = data.get('summary')
         history = data.get('history')
         insert_id = data.get('insert_id')
-
-        logger.info('summary: %s', summary)
-        logger.info('insert_id: %s', insert_id)
-        logger.info('history: %s', history)
 
         if summary is None or history is None or insert_id is None:
             return jsonify({'error': 'Summary or history not found in request payload'}), 400
