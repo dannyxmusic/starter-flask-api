@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 import os
+import random
 import subprocess
 import requests
 
@@ -21,6 +22,7 @@ client = MongoClient(MONGO_URI)
 # Access the database and collection
 db = client['tpc_survey_f1']
 collection = db['cyclic_server']
+collection2 = db['survey_testimonials']
 
 # Path to the openai.py script
 OPENAI_SCRIPT_PATH1 = 'openai_tg.py'
@@ -74,7 +76,7 @@ def parse_pretty_data(pretty_data):
     return extracted_data
 
 
-async def process_openai_script(inserted_id, parsed_data):
+async def process_openai_script(inserted_id, parsed_data, contents):
     """
     Asynchronously trigger the process_openai endpoint.
     """
@@ -82,7 +84,9 @@ async def process_openai_script(inserted_id, parsed_data):
         insert_id = str(inserted_id)
         url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai'
         payload = {'inserted_id': insert_id,
-                   'survey_responses': parsed_data}
+                   'survey_responses': parsed_data,
+                   'contents': contents
+                   }
         response = requests.post(url, json=payload)
 
         if response.status_code == 200:
@@ -120,9 +124,22 @@ async def submit_form():
 
         result = collection.insert_one(document)
 
+        all_ids = [doc["_id"] for doc in collection2.find({}, {"_id": 1})]
+        random_ids = random.sample(all_ids, 2)
+
+        def extract_content(doc):
+            return ' '.join([doc[key] for key in ["short_testimonial", "medium_testimonial", "long_testimonial"]])
+
+        contents = []
+
+        for random_id in random_ids:
+            document = collection2.find_one({"_id": random_id})
+            content = extract_content(document)  # Await here
+            contents.append(content)
+
         # Asynchronously process the openai.py script
         asyncio.create_task(process_openai_script(
-            result.inserted_id, parsed_data))
+            result.inserted_id, parsed_data, contents))
 
         return jsonify({
             'message': 'Document inserted successfully',
@@ -144,13 +161,14 @@ async def process_openai():
         inserted_id = data.get('inserted_id')
         survey_responses = data.get('survey_responses')
         survey_responses_str = json.dumps(survey_responses)
+        contents = data.get('contents')
 
         if inserted_id is None:
             return jsonify({'error': 'Inserted ID not found in request payload'}), 400
 
         # Execute subprocess with inserted_id as command-line argument
         subprocess.run(['python', OPENAI_SCRIPT_PATH1,
-                       str(inserted_id), survey_responses_str], check=True)
+                       str(inserted_id), survey_responses_str, str(contents)], check=True)
 
         return jsonify({'message': 'OpenAI subprocess completed successfully'}), 200
 
