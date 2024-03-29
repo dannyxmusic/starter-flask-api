@@ -87,10 +87,10 @@ third_item = long_testimonial
 
 message_body = (
     f"Email: {email_address}\n \n"
-    f"Short Testimonial: {first_item}\n \n"
-    f"Medium Testimonial: {second_item}\n \n"
-    f"Long Testimonial: {third_item}\n \n"
-    f"Survey Responses:\n{formatted_survey_responses}"
+    f"*Short Testimonial:* {first_item}\n \n"
+    f"*Medium Testimonial:* {second_item}\n \n"
+    f"*Long Testimonial:* {third_item}\n \n"
+    f"*Survey Responses:*\n{formatted_survey_responses}"
 )
 
 message = EmailMessage()
