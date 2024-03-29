@@ -58,6 +58,7 @@ async def send_post_request(summary, history, insert_id):
             'history': history,
             'insert_id': insert_id
         }
+        logger.info(payload)
         response = requests.post(url, json=payload)
 
         if response.status == 200:
@@ -131,13 +132,11 @@ async def process_openai(insert_id, survey_data):
     memory.save_context(inputs, {"output": response})
 
     history = memory.load_memory_variables({})
-    logger.info(history)
 
     inputs = {
         "input": f"Please review the conversation history. conversation_history = {history}, 1. Give me a summary of the original survey questions and responses. 2. Notate repeating words or phrases. 3. Summarize the human to ai conversation."
     }
     summary = chain2.invoke(inputs)
-    logger.info(summary)
 
     # Asynchronously process the openai.py script
     asyncio.create_task(send_post_request(summary, history, insert_id))
