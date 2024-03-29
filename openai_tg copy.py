@@ -32,7 +32,7 @@ EMAIL_SCRIPT_PATH = 'email_tg.py'
 # Path to the OpenAI API key
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 
-model2 = ChatOpenAI(model='gpt-3.5-turbo', temperature=0.8,
+model2 = ChatOpenAI(model='gpt-3.5-turbo', temperature=0.7,
                     api_key=OPENAI_API_KEY)
 
 # Initialize output parser
@@ -87,14 +87,14 @@ async def process_openai(summary, history, insert_id):
     prev_provider = survey_responses[key4]
 
     prompt3 = ChatPromptTemplate.from_messages([
-        ("system", "You are an AI tool designed generate a testimonial based on survey results. You do 3 things. Write in first person from the perspective of the customer. 2. Recieve a summary of the context. In the summary are the survey results and words or phrasing that should be avoided 3. Generate a unique testimonials. \n Do not start testimonials with 'Transitioning to TPC', 'I recently transitioned' or 'The transition'"),
+        ("system", "You are an AI tool designed generate a testimonial based on survey results. You do 3 things. 1. Recieve the summary of the survey and words/phrases to omit 2. Write in first person from the client who completed the survey. 3. Generate a uniquely worded testimonials. \n Do not start testimonials with 'Transitioning to TPC', 'I recently transitioned' or 'The transition'"),
         ("human", "{input}"),
     ])
 
     chain3 = (prompt3 | model2 | output_parser)
 
     input1 = {
-        'input': f'Review the context: context={summary}. Do not use words or phrases listed in section 2 of the context. \nGenerate a 60-80 word testimonial using the information provided. Include the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive include the customer\'s response to retain authenticity of the testimony.'
+        'input': f'Review the data: summary={summary}. Do not use words or phrases listed in section 2 of the summary. \nGenerate a 60-80 word testimonial using the information provided. Include the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is positive include the customer\'s response to retain authenticity of the testimony.'
     }
 
     medium_testimony = chain3.invoke(input1)
