@@ -174,7 +174,7 @@ async def process_openai2():
         logger.info('insert_id: %s', insert_id)
         logger.info('history: %s', history)
 
-        if summary is None or history or insert_id is None:
+        if summary is None or history is None or insert_id is None:
             return jsonify({'error': 'Summary or history not found in request payload'}), 400
 
         # Execute subprocess with summary and history as command-line arguments
