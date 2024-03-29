@@ -37,7 +37,7 @@ EMAIL_SCRIPT_PATH = 'email_tg.py'
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 
 # Initialize OpenAI instance
-model = ChatOpenAI(model='gpt-3.5-turbo', temperature=0.2,
+model = ChatOpenAI(model='gpt-3.5-turbo', temperature=0,
                    api_key=OPENAI_API_KEY)
 model2 = ChatOpenAI(model='gpt-3.5-turbo', temperature=0.8,
                     api_key=OPENAI_API_KEY)
@@ -51,6 +51,7 @@ async def send_post_request(summary, history, insert_id):
     Send HTTP POST request with summary and history data.
     """
     try:
+        history = [message.__dict__ for message in history]
         url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai'
         payload = {
             'summary': summary,
@@ -133,7 +134,7 @@ async def process_openai(insert_id, survey_data):
     logger.info(history)
 
     inputs = {
-        "input": f"Please review the conversation history. conversation_history = {history}"
+        "input": f"Please review the conversation history. conversation_history = {history}, 1. Give me a summary of the original survey questions and responses. 2. Notate repeating words or phrases. 3. Summarize the human to ai conversation."
     }
     summary = chain2.invoke(inputs)
     logger.info(summary)
