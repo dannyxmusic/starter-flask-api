@@ -81,34 +81,35 @@ async def process_openai(summary, history, insert_id):
     key4 = "Who was your previous Payroll Provider?"
 
     data = collection.find_one({"_id": insert_id})
+    submission_id = data['submission_id']
     survey_responses = data['survey_responses']
     amt_employees = survey_responses[key3]
     additional_feedback = survey_responses[key1]
     prev_provider = survey_responses[key4]
 
     prompt3 = ChatPromptTemplate.from_messages([
-        ("system", "You are an AI tool designed generate a testimonial based on survey results. You do 3 things. 1. Recieve the summary of the survey and words/phrases to omit 2. Write in first person from the client who completed the survey. 3. Generate a uniquely worded testimonials. \n Do not start testimonials with 'Transitioning to TPC', 'I recently transitioned' or 'The transition'"),
+        ("system", "You are an AI tool designed generate a testimonial based on survey results. You do 3 things. 1. Recieve a summary which includes the survey responses, words/phrases to omit, and context. 2. Write in first person from the client who completed the survey. 3. Generate a uniquely worded testimonials.'"),
         ("human", "{input}"),
     ])
 
     chain3 = (prompt3 | model2 | output_parser)
 
     input1 = {
-        'input': f'Review the data: summary={summary}. Do not use words or phrases listed in section 2 of the summary. \nGenerate a 60-80 word testimonial using the information provided. Include the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is positive include the customer\'s response to retain authenticity of the testimony.'
+        'input': f'Review the data: summary={summary}. Do not use words or phrases listed in section 2 of the summary. \nGenerate a 60-80 word testimonial using the information provided. Include the amount of employees the company has ({amt_employees}). Mention the company ({prev_provider}). Include some of this ({additional_feedback}) if it has a positive sentiment. Do not start the testimonial with "Transitioning to TPC", "transitioning", "The transition", or "I recently transitioned".'
     }
 
     medium_testimony = chain3.invoke(input1)
     # logger.info(medium_testimony)
 
     input2 = {
-        'input': f'Review the context: context={summary}. Do not use words or phrases listed in section 2 of the context. \nGenerate a 30-50 word testimonial using the information provided. Include the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive include the customer\'s response to retain authenticity of the testimony.'
+        'input': f'Review the context: context={summary}. Do not use words or phrases listed in section 2 of the context. \nGenerate a 30-50 word testimonial using the information provided. Include the amount of employees the company has ({amt_employees}). Mention the company ({prev_provider}). Include some of this ({additional_feedback}) if it has a positive sentiment. Do not start the testimonial with "Transitioning to TPC", "transitioning", "The transition", or "I recently transitioned".'
     }
 
     short_testimony = chain3.invoke(input2)
     # logger.info(short_testimony)
 
     input3 = {
-        'input': f'Review the context: context={summary}. Do not use words or phrases listed in section 2 of the context. \nGenerate a 100-120 word testimonial using the information provided. Include the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive include the customer\'s response to retain authenticity of the testimony.'
+        'input': f'Review the context: context={summary}. Do not use words or phrases listed in section 2 of the context. \nGenerate a 100-120 word testimonial using the information provided. Include the amount of employees the company has ({amt_employees}). Mention the company ({prev_provider}). Include some of this ({additional_feedback}) if it has a positive sentiment. Do not start the testimonial with "Transitioning to TPC", "transitioning", "The transition", or "I recently transitioned".'
     }
 
     long_testimony = chain3.invoke(input3)
@@ -120,7 +121,7 @@ async def process_openai(summary, history, insert_id):
     # Update the original document with conversation history
     append_testimonials(
         context=history, summary=summary, short=short_testimony,
-        medium=medium_testimony, long=long_testimony, submission_id=insert_id
+        medium=medium_testimony, long=long_testimony, submission_id=submission_id
     )
 
     print(type(insert_id), type(short_testimony), type(
