@@ -15,6 +15,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 from langchain_core.output_parsers import StrOutputParser
 from pymongo import MongoClient
+import requests
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -49,20 +50,24 @@ async def send_post_request(summary, history, insert_id):
     """
     Send HTTP POST request with summary and history data.
     """
-    url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai2'
-    async with aiohttp.ClientSession() as session:
-        payload = {
-            'summary': summary,
-            'history': history,
-            'insert_id': insert_id
-        }
-        async with session.post(url, json=payload) as response:
-            if response.status != 200:
-                logger.error(
-                    f'Failed to send HTTP POST request: {response.status}'
-                )
-            else:
-                logger.info("HTTP POST request sent successfully.")
+    logger = logging.getLogger(__name__)
+    try:
+        url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai2'
+        async with aiohttp.ClientSession() as session:
+            payload = {
+                'summary': summary,
+                'history': history,
+                'insert_id': insert_id
+            }
+            async with session.post(url, json=payload) as response:
+                if response.status == 200:
+                    logger.info(
+                        'Internal HTTP request to process_openai endpoint successful')
+                else:
+                    logger.error(
+                        'Internal HTTP request to process_openai endpoint failed')
+    except Exception as e:
+        logger.error(f'An error occurred: {str(e)}')
 
 
 async def process_openai(insert_id, survey_data):
