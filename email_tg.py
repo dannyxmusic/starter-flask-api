@@ -87,15 +87,15 @@ third_item = long_testimonial
 
 message_body = (
     f"Email: {email_address}\n \n"
-    f"*Short Testimonial:* {first_item}\n \n"
-    f"*Medium Testimonial:* {second_item}\n \n"
-    f"*Long Testimonial:* {third_item}\n \n"
-    f"*Survey Responses:*\n{formatted_survey_responses}"
+    f"Short Testimonial: {first_item}\n \n"
+    f"Medium Testimonial: {second_item}\n \n"
+    f"Long Testimonial: {third_item}\n \n"
+    f"Survey Responses:\n{formatted_survey_responses}"
 )
 
 message = EmailMessage()
 message.set_content(message_body)
-message["To"] = "sandagedaniel@gmail.com, "  # grant@thepayrollco.com"
+message["To"] = "sandagedaniel@gmail.com, "  "grant@thepayrollco.com"
 message["From"] = "therealdannyx@gmail.com"
 message["Subject"] = "New Ai Testimonial"
 
