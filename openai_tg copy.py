@@ -140,27 +140,6 @@ async def process_openai(summary, history, insert_id):
                               medium=medium_testimony, long=long_testimony, submission_id=submission_id)
 
 
-def update_testimonials(insert_id):
-    """
-    Update testimonials.
-
-    Args:
-        insert_id (str): The ID of the document.
-    """
-    # Convert insert_id to ObjectId
-    insert_id = ObjectId(insert_id)
-
-    result = collection.find_one({"_id": insert_id})
-
-    filtered_response = {
-        "content8": result.get("conversationHistory", {}).get("content8"),
-        "content10": result.get("conversationHistory", {}).get("content10"),
-        "content12": result.get("conversationHistory", {}).get("content12"),
-        "submissionID": result.get("submissionID")
-    }
-    result = collection2.insert_one(filtered_response)
-
-
 if __name__ == "__main__":
     if len(sys.argv) < 4:
         logger.error("Usage: python openai_test.py <insert_id> <data>")
@@ -172,6 +151,9 @@ if __name__ == "__main__":
 
     # Run process_openai asynchronously
     asyncio.run(process_openai(summary, history))
+
+    # Close MongoDB connection
+    client.close()
 
     # Call the email.py script
     subprocess.run(['python', EMAIL_SCRIPT_PATH, insert_id])
