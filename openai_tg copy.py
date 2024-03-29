@@ -82,6 +82,7 @@ async def process_openai(summary, history, insert_id):
         insert_id (str): The ID of the document.
         data (dict): The data to process.
     """
+    logger.info('Generating Testimonials...')
     insert_id = ObjectId(insert_id)
     key1 = "Please share your experience or any additional feedback you have regarding your experience with Grant Stuart and TPC."
     key3 = "How many employees does your company currently process payroll for?"
