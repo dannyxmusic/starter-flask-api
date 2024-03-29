@@ -51,7 +51,8 @@ async def send_post_request(summary, history, insert_id):
     Send HTTP POST request with summary and history data.
     """
     try:
-        history = history['history']
+        print("History:", history)
+        print("Type of history:", type(history))
         history_serializable = []
         for message in history:
             if isinstance(message, (HumanMessage, AIMessage)):
