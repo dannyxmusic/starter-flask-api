@@ -2,10 +2,7 @@ import asyncio
 import json
 import logging
 import os
-import subprocess
 import sys
-import random
-import aiohttp  # Added import statement
 
 from operator import itemgetter
 from bson import ObjectId
@@ -101,19 +98,6 @@ async def process_openai(insert_id, survey_data):
     Process data using OpenAI.
     """
     survey_responses = survey_data
-
-    # all_ids = [doc["_id"] for doc in collection2.find({}, {"_id": 1})]
-    # random_ids = random.sample(all_ids, 2)
-
-    # def extract_content(doc):
-    #     return ' '.join([doc[key] for key in ["short_testimonial", "medium_testimonial", "long_testimonial"]])
-
-    # contents = []
-
-    # for random_id in random_ids:
-    #     document = collection2.find_one({"_id": random_id})
-    #     content = extract_content(document)  # Await here
-    #     contents.append(content)
 
     prompt1 = ChatPromptTemplate.from_messages([
         ("system", "You are an AI designed to assist in testimonial generation. I provide you survey results and you do 2 things; 1. analyze sentiment. 2. Detect recurring wordage or phrasing from previous testimonials."),
