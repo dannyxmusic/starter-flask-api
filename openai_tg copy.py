@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 import os
 import subprocess
@@ -38,7 +39,7 @@ model2 = ChatOpenAI(model='gpt-3.5-turbo', temperature=0.8,
 output_parser = StrOutputParser()
 
 
-async def append_testimonials(context, summary, short, medium, long, submission_id):
+def append_testimonials(context, summary, short, medium, long, submission_id):
     """
     Update testimonials in MongoDB collection.
 
@@ -59,7 +60,7 @@ async def append_testimonials(context, summary, short, medium, long, submission_
             "medium_testimonial": medium,
             "long_testimonial": long,
         }
-        await collection2.insert_one(filtered_response)
+        collection2.insert_one(filtered_response)
         print("Testimonials updated successfully.")
     except Exception as e:
         print(f"Error occurred while updating testimonials: {e}")
@@ -114,6 +115,9 @@ async def process_openai(summary, history, insert_id):
     long_testimony = chain3.invoke(input3)
     # logger.info(long_testimony)
 
+    # Convert survey_responses to a string
+    survey_responses_str = json.dumps(survey_responses)
+
     # Update the original document with conversation history
     append_testimonials(
         context=history, summary=summary, short=short_testimony,
@@ -121,13 +125,13 @@ async def process_openai(summary, history, insert_id):
     )
 
     print(type(insert_id), type(short_testimony), type(
-        medium_testimony), type(long_testimony), type(survey_responses)
+        medium_testimony), type(long_testimony), type(survey_responses_str)
     )
 
     # Call the email.py script
     subprocess.run(
         ['python', EMAIL_SCRIPT_PATH, str(insert_id), short_testimony,
-         medium_testimony, long_testimony, survey_responses]
+         medium_testimony, long_testimony, survey_responses_str]
     )
 
 
