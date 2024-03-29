@@ -51,13 +51,14 @@ async def send_post_request(summary, history, insert_id):
     Send HTTP POST request with summary and history data.
     """
     try:
-        # history_serializable = []
-        # for message in history:
-        #     if isinstance(message, HumanMessage) or isinstance(message, AIMessage):
-        #         message_dict = {'content': message.content}
-        #         history_serializable.append(message_dict)
-        #     else:
-        #         logger.warning(f"Unrecognized message type: {type(message)}")
+        history = history['history']
+        history_serializable = []
+        for message in history:
+            if isinstance(message, (HumanMessage, AIMessage)):
+                message_dict = {'content': message.content}
+                history_serializable.append(message_dict)
+            else:
+                logger.warning(f"Unrecognized message type: {type(message)}")
 
         url = 'https://easy-plum-stingray-toga.cyclic.app/process_openai'
         payload = {
@@ -65,7 +66,7 @@ async def send_post_request(summary, history, insert_id):
             'history': history['history'],
             'insert_id': insert_id
         }
-        logger.info(payload)
+        # logger.info(payload)
 
         response = requests.post(url, json=payload)
         if response.status == 200:

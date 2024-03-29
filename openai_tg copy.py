@@ -141,7 +141,7 @@ if __name__ == "__main__":
     insert_id = sys.argv[3]
 
     # Run process_openai asynchronously
-    asyncio.run(process_openai(summary, history))
+    asyncio.run(process_openai(summary, history, insert_id))
 
     # Call the email.py script
     subprocess.run(['python', EMAIL_SCRIPT_PATH, insert_id])
