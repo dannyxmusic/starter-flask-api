@@ -84,8 +84,6 @@ async def send_post_request(summary, history, insert_id):
             'insert_id': insert_id
         }
 
-        logger.info(payload)
-
         response = requests.post(url, json=payload)
         if response.status == 200:
             logger.info(
