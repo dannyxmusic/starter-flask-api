@@ -120,6 +120,10 @@ async def process_openai(summary, history, insert_id):
         medium=medium_testimony, long=long_testimony, submission_id=insert_id
     )
 
+    print(type(insert_id), type(short_testimony), type(
+        medium_testimony), type(long_testimony), type(survey_responses)
+    )
+
     # Call the email.py script
     subprocess.run(
         ['python', EMAIL_SCRIPT_PATH, str(insert_id), short_testimony,
