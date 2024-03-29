@@ -143,8 +143,5 @@ if __name__ == "__main__":
     # Run process_openai asynchronously
     asyncio.run(process_openai(summary, history))
 
-    # Close MongoDB connection
-    client.close()
-
     # Call the email.py script
     subprocess.run(['python', EMAIL_SCRIPT_PATH, insert_id])
