@@ -51,12 +51,12 @@ async def append_testimonials(context, summary, short, medium, long, submission_
         submission_id (str): The submission ID associated with the testimonials.
     """
     try:
-        serialized_history = [{'type': 'human', 'content': message.content} if isinstance(message, HumanMessage)
-                              else {'type': 'ai', 'content': message.content} for message in context['history']]
+        # serialized_history = [{'type': 'human', 'content': message.content} if isinstance(message, HumanMessage)
+        #                       else {'type': 'ai', 'content': message.content} for message in context['history']]
 
         filtered_response = {
             "submission_id": submission_id,
-            "context": serialized_history,
+            "context": context,
             "summary": summary,
             "short_testimonial": short,
             "medium_testimonial": medium,
@@ -114,14 +114,14 @@ async def process_openai(summary, history, insert_id):
     }
 
     short_testimony = chain3.invoke(input2)
-    logger.info(short_testimony)
+    # logger.info(short_testimony)
 
     input3 = {
         'input': f'Review the context: context={summary}. \nGenerate a 100-120 word testimonial using the information provided. Incorporate the amount of employees the company has ({amt_employees}). If the previous payroll provider is listed then mention the company ({prev_provider}). If the additional feedback ({additional_feedback}) is negative please reword to have a positive outlook for future improvements. If the additional feedback ({additional_feedback}) is positive please incorporate verbatim the customer\'s wording to retain authenticity of the testimony.'
     }
 
     long_testimony = chain3.invoke(input3)
-    logger.info(long_testimony)
+    # logger.info(long_testimony)
 
     # Update the original document with conversation history
     await append_testimonials(context=history, summary=summary, short=short_testimony,
