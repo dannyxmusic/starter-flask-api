@@ -6,6 +6,7 @@ import sys
 
 from operator import itemgetter
 from bson import ObjectId
+from flask import jsonify
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
@@ -143,16 +144,27 @@ async def process_openai(insert_id, survey_data):
     logger.info('Task Created')
 
 if __name__ == "__main__":
-    if len(sys.argv) < 4:
-        logger.error("Usage: python openai_test.py <insert_id> <data>")
-        sys.exit(1)
+    try:
+        if len(sys.argv) < 4:
+            logger.error("Usage: python openai_test.py <insert_id> <data>")
+            sys.exit(1)
 
-    insert_id = sys.argv[1]
-    survey_data = sys.argv[2]
-    contents = sys.argv[3]
+        insert_id = sys.argv[1]
+        survey_data = sys.argv[2]
+        contents = sys.argv[3]
 
-    # Run process_openai asynchronously
-    asyncio.run(process_openai(insert_id=insert_id, survey_data=survey_data))
+        # Run process_openai asynchronously
+        asyncio.run(process_openai(
+            insert_id=insert_id, survey_data=survey_data))
+        # Close MongoDB connection
+        client.close()
 
-    # Close MongoDB connection
-    client.close()
+        # Return a success message
+        print(
+            jsonify({'message': 'OpenAI subprocess completed successfully'}), 200)
+
+    except Exception as e:
+        # Log the exception
+        logger.exception(f'An error occurred: {str(e)}')
+        # Return an error message
+        print(jsonify({'error': str(e)}), 500)
