@@ -203,8 +203,8 @@ async def process_openai2():
 
 CLIENT_ID = os.environ.get('GMAIL_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('GMAIL_CLIENT_SECRET')
-REDIRECT_URI = 'http://localhost:5000/callback'
-SCOPE = 'https://www.googleapis.com/auth/gmail.readonly'
+REDIRECT_URI = 'https://easy-plum-stingray-toga.cyclic.app/callback'
+SCOPE = 'https://www.googleapis.com/auth/gmail.compose'
 AUTHORIZE_URL = 'https://accounts.google.com/o/oauth2/auth'
 TOKEN_URL = 'https://accounts.google.com/o/oauth2/token'
 
