@@ -6,7 +6,7 @@ import random
 import subprocess
 import requests
 
-from flask import Flask, redirect, request, jsonify
+from flask import Flask, request, jsonify
 from pymongo import MongoClient
 
 app = Flask(__name__)
@@ -200,42 +200,6 @@ async def process_openai2():
     except Exception as e:
         logger.exception(f'An error occurred: {str(e)}')
         return jsonify({'error': str(e)}), 500
-
-CLIENT_ID = os.environ.get('GMAIL_CLIENT_ID')
-CLIENT_SECRET = os.environ.get('GMAIL_CLIENT_SECRET')
-REDIRECT_URI = 'https://easy-plum-stingray-toga.cyclic.app/callback'
-SCOPE = 'https://www.googleapis.com/auth/gmail.compose'
-AUTHORIZE_URL = 'https://accounts.google.com/o/oauth2/auth'
-TOKEN_URL = 'https://accounts.google.com/o/oauth2/token'
-
-
-@app.route('/login')
-def login():
-    authorization_url = f'{AUTHORIZE_URL}?client_id={CLIENT_ID}&redirect_uri={
-        REDIRECT_URI}&scope={SCOPE}&response_type=code'
-    return redirect(authorization_url)
-
-
-@app.route('/callback')
-def callback():
-    code = request.args.get('code')
-    token_payload = {
-        'code': code,
-        'client_id': CLIENT_ID,
-        'client_secret': CLIENT_SECRET,
-        'redirect_uri': REDIRECT_URI,
-        'grant_type': 'authorization_code'
-    }
-    response = requests.post(TOKEN_URL, data=token_payload)
-    tokens = response.json()
-    access_token = tokens['access_token']
-    refresh_token = tokens['refresh_token']
-
-    # Store tokens securely for future use
-    # Now you can use the access token to make authenticated requests to the Gmail API
-
-    return "Authentication successful! Tokens obtained."
-
 
 if __name__ == '__main__':
     app.run(debug=True)
