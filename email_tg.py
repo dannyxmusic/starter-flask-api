@@ -8,20 +8,46 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from pymongo import MongoClient
 from bson import ObjectId
+import requests
 
 
 # Gmail credentials
-GMAIL_ACCESS_TOKEN = os.environ.get('GMAIL_ACCESS_TOKEN')
 GMAIL_REFRESH_TOKEN = os.environ.get('GMAIL_REFRESH_TOKEN')
 GMAIL_CLIENT_ID = os.environ.get('GMAIL_CLIENT_ID')
 GMAIL_CLIENT_SECRET = os.environ.get('GMAIL_CLIENT_SECRET')
+
+# Prepare the request payload
+payload = {
+    "client_id": GMAIL_CLIENT_ID,
+    "client_secret": GMAIL_CLIENT_SECRET,
+    "refresh_token": GMAIL_REFRESH_TOKEN,
+    "grant_type": "refresh_token"
+}
+
+# Send a POST request to obtain a new access token
+response = requests.post(
+    "https://www.googleapis.com/oauth2/v4/token", data=payload)
+
+# Check the response status code
+if response.status_code == 200:
+    # Parse the JSON response
+    token_data = response.json()
+
+    # Extract the new access token
+    access_token = token_data.get("access_token")
+
+    # Print or use the access token
+    print("New access token:", access_token)
+else:
+    print("Failed to refresh access token. Status code:", response.status_code)
+
 
 # MongoDB URI
 MONGO_URI = os.environ.get('MONGO_URI')
 
 # Initialize OAuth 2.0 credentials
 credentials = Credentials(
-    GMAIL_ACCESS_TOKEN,
+    access_token=access_token,
     refresh_token=GMAIL_REFRESH_TOKEN,
     token_uri='https://oauth2.googleapis.com/token',
     client_id=GMAIL_CLIENT_ID,
@@ -96,7 +122,8 @@ message_body = (
 
 message = EmailMessage()
 message.set_content(message_body)
-message["To"] = "sandagedaniel@gmail.com, "  "grant@thepayrollco.com"
+message["To"] = "sandagedaniel@gmail.com"
+"grant@thepayrollco.com"
 message["From"] = "therealdannyx@gmail.com"
 message["Subject"] = "New Ai Testimonial"
 
